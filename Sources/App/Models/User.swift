@@ -40,3 +40,17 @@ extension User: Parameter {}
 extension User: Migration {}
 extension User: Content {}
 extension User.Public: Content {}
+
+extension User {
+    func toPublic() -> User.Public {
+        return User.Public(id: id, username: username)
+    }
+}
+
+extension Future where T: User {
+    func toPublic() -> Future<User.Public> {
+        return map(to: User.Public.self) { user in
+            return user.toPublic()
+        }
+    }
+}

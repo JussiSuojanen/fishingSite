@@ -7,6 +7,7 @@
 
 import Vapor
 import FluentMySQL
+import Authentication
 
 final class User: Codable {
     var id: Int?
@@ -34,12 +35,29 @@ final class User: Codable {
         }
     }
 }
-
 extension User: MySQLModel {}
 extension User: Parameter {}
-extension User: Migration {}
 extension User: Content {}
 extension User.Public: Content {}
+
+extension User: BasicAuthenticatable {
+    static var usernameKey: UsernameKey {
+        return \User.username
+    }
+
+    static var passwordKey: PasswordKey {
+        return \User.password
+    }
+}
+
+extension User: Migration {
+    static func prepare(on conn: MySQLConnection) -> Future<Void> {
+        return Database.create(self, on: conn) { (builder) in
+            try addProperties(to: builder)
+            builder.unique(on: \.username)
+        }
+    }
+}
 
 extension User {
     func toPublic() -> User.Public {
@@ -53,4 +71,8 @@ extension Future where T: User {
             return user.toPublic()
         }
     }
+}
+
+extension User: TokenAuthenticatable {
+    typealias TokenType = Token
 }

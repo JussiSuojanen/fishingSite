@@ -1,10 +1,12 @@
 import FluentMySQL
 import Vapor
 import Leaf
+import Authentication
 
 public func configure(_ config: inout Config, _ env: inout Environment, _ services: inout Services) throws {
     try services.register(FluentMySQLProvider())
     try services.register(LeafProvider())
+    try services.register(AuthenticationProvider())
 
     let router = EngineRouter.default()
     try routes(router)
@@ -28,6 +30,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
 
     var migrations = MigrationConfig()
     migrations.add(model: User.self, database: .mysql)
+    migrations.add(model: Token.self, database: .mysql)
     services.register(migrations)
 
     config.prefer(LeafRenderer.self, for: ViewRenderer.self)

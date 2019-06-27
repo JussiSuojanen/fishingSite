@@ -23,9 +23,20 @@ final class User: Codable {
         self.username = username
         self.password = password
     }
+
+    final class Public: Codable {
+        var id: Int?
+        var username: String
+
+        init(id: Int?, username: String) {
+            self.id = id
+            self.username = username
+        }
+    }
 }
 
 extension User: MySQLModel {}
 extension User: Parameter {}
 extension User: Migration {}
 extension User: Content {}
+extension User.Public: Content {}

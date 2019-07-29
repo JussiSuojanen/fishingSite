@@ -16,7 +16,15 @@ struct IndexController: RouteCollection {
     }
 
     func indexHandler(_ req: Request) throws -> Future<View> {
-        return try req.view().render("index")
+        let userLoggedIn = try req.isAuthenticated(User.self)
+        let showCookieMessage =
+            req.http.cookies["cookies-accepted"] == nil
+        let context = IndexContext(
+            title: "Fishing site!",
+            userLoggedIn: userLoggedIn,
+            showCookieMessage: showCookieMessage)
+
+        return try req.view().render("index", context)
     }
 
     func loginHandler(_ req: Request) throws -> Future<View> {
@@ -51,6 +59,11 @@ struct IndexController: RouteCollection {
 
         return req.redirect(to: "/")
     }
+}
+struct IndexContext: Encodable {
+    let title: String
+    let userLoggedIn: Bool
+    let showCookieMessage: Bool
 }
 
 struct LoginContext: Encodable {

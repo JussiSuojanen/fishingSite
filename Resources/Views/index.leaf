@@ -1,11 +1,6 @@
-<!DOCTYPE html>
+#set("content") {
 
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <title>Fishing site</title>
-    </head>
-    <body>
-        <h1>Very nice fishing!</h1>
-    </body>
-</html>
+<h1>#(title)</h1>
+
+}
+#embed("base")

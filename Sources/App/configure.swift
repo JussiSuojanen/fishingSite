@@ -14,6 +14,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
 
     var middlewares = MiddlewareConfig()
     middlewares.use(ErrorMiddleware.self)
+    middlewares.use(SessionsMiddleware.self)
     services.register(middlewares)
 
     var databases = DatabasesConfig()
@@ -34,4 +35,5 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     services.register(migrations)
 
     config.prefer(LeafRenderer.self, for: ViewRenderer.self)
+    config.prefer(MemoryKeyedCache.self, for: KeyedCache.self)
 }

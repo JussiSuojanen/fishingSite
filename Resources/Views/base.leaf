@@ -8,6 +8,17 @@
         <title>#(title) | kalastuskisa!</title>
     </head>
     <body>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+            <a class="navbar-brand" href="/">HOME</a>
+            <div>
+                #if(userLoggedIn) {
+                <form class="form-inline" action="/logout" method="POST">
+                    <input class="nav-link btn" type="submit" value="Log out">
+                </form>
+                }
+            </div>
+        </nav>
+
         <div class="container mt-3">
             #get(content)
         </div>

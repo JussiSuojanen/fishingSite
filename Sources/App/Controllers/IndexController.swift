@@ -12,6 +12,7 @@ struct IndexController: RouteCollection {
         authSessionRoutes.get("login", use: loginHandler)
         authSessionRoutes.post(LoginPostData.self, at: "login",
                     use: loginPostHandler)
+        authSessionRoutes.post("logout", use: logoutHandler)
     }
 
     func indexHandler(_ req: Request) throws -> Future<View> {
@@ -43,6 +44,12 @@ struct IndexController: RouteCollection {
 
                 return req.redirect(to: "/")
         }
+    }
+
+    func logoutHandler(_ req: Request) throws -> Response {
+        try req.unauthenticateSession(User.self)
+
+        return req.redirect(to: "/")
     }
 }
 

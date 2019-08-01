@@ -109,9 +109,11 @@ struct IndexContext: Encodable {
 struct LoginContext: Encodable {
     let title = "Log in"
     let loginError: Bool
+    let userLoggedIn: Bool
 
-    init(loginError: Bool = false) {
+    init(loginError: Bool = false, userLoggedIn: Bool = false) {
         self.loginError = loginError
+        self.userLoggedIn = userLoggedIn
     }
 }
 
@@ -123,9 +125,11 @@ struct LoginPostData: Content {
 struct RegisterContext: Encodable {
     let title = "Register"
     let message: String?
+    let userLoggedIn: Bool
 
-    init(message: String? = nil) {
+    init(message: String? = nil, userLoggedIn: Bool = false) {
         self.message = message
+        self.userLoggedIn = userLoggedIn
     }
 }
 

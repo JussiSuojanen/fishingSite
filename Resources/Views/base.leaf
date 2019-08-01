@@ -24,6 +24,11 @@
                         <a href="/register" class="nav-link">Register</a>
                     </li>
                     }
+                    #if(userLoggedIn) {
+                    <li class="nav-item #if(title == "New event"){active}">
+                        <a href="/event" class="nav-link">New event</a>
+                    </li>
+                    }
                 </ul>
             <div>
                 #if(userLoggedIn) {

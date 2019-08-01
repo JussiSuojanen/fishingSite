@@ -16,6 +16,8 @@ struct IndexController: RouteCollection {
         authSessionRoutes.get("register", use: registerHandler)
         authSessionRoutes.post(RegisterData.self, at: "register",
                                use: registerPostHandler)
+        authSessionRoutes.get("event", use: eventHandler)
+        authSessionRoutes.post(EventPostData.self, at: "event", use: eventPostHandler)
     }
 
     func indexHandler(_ req: Request) throws -> Future<View> {
@@ -98,6 +100,30 @@ struct IndexController: RouteCollection {
             return req.redirect(to: "/")
         }
     }
+
+    func eventHandler(_ req: Request) throws -> Future<View> {
+        return try req.view().render("event", EventContext())
+    }
+
+    func eventPostHandler(_ req: Request, data: EventPostData) throws -> Future<Response> {
+        // TODO: Should handle unique event name error?
+        let user = try req.requireAuthenticated(User.self)
+
+        let event = Event(name: data.name, code: data.code)
+        return event
+            .save(on: req)
+            .map(to: UserEvent.self) { event in
+                guard let userId = user.id, let eventId = event.id else {
+                    throw Abort(.badRequest, reason: "Could not create event: \(event.name)")
+                }
+                return UserEvent(userId: userId, eventId: eventId)
+            }
+            .save(on: req)
+            .map(to: Response.self) { userEvent in
+                // TODO: change / to the event created page with correct content!
+                return req.redirect(to: "/")
+            }
+    }
 }
 
 struct IndexContext: Encodable {
@@ -156,4 +182,13 @@ extension RegisterData: Validatable, Reflectable {
             }
             return validations
     }
+}
+
+struct EventContext: Encodable {
+    let title = "Create new event"
+}
+
+struct EventPostData: Content {
+    let name: String
+    let code: String
 }

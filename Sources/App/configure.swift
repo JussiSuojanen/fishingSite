@@ -33,6 +33,8 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     var migrations = MigrationConfig()
     migrations.add(model: User.self, database: .mysql)
     migrations.add(model: Token.self, database: .mysql)
+    migrations.add(model: Event.self, database: .mysql)
+    migrations.add(model: UserEvent.self, database: .mysql)
     services.register(migrations)
 
     config.prefer(LeafRenderer.self, for: ViewRenderer.self)

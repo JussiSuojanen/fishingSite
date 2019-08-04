@@ -44,7 +44,7 @@ struct IndexController: RouteCollection {
 
     func loginPostHandler(_ req: Request, userData: LoginPostData) throws -> Future<Response> {
         return User.authenticate(
-            username: userData.username,
+            username: userData.email,
             password: userData.password,
             using: BCryptDigest(),
             on: req).map(to: Response.self) { user in
@@ -90,7 +90,7 @@ struct IndexController: RouteCollection {
         }
 
         let password = try BCrypt.hash(data.password)
-        let user = User(username: data.username, password: password)
+        let user = User(email: data.email, username: data.username, password: password)
 
         return user.save(on: req).map(to: Response.self) { user in
             try req.authenticateSession(user)
@@ -118,7 +118,7 @@ struct LoginContext: Encodable {
 }
 
 struct LoginPostData: Content {
-    let username: String
+    let email: String
     let password: String
 }
 
@@ -134,6 +134,7 @@ struct RegisterContext: Encodable {
 }
 
 struct RegisterData: Content {
+    let email: String
     let username: String
     let password: String
     let confirmPassword: String
@@ -143,6 +144,7 @@ extension RegisterData: Validatable, Reflectable {
     static func validations() throws
         -> Validations<RegisterData> {
             var validations = Validations(RegisterData.self)
+            try validations.add(\.email, .email)
             try validations.add(\.username,
                 .alphanumeric && .count(2...))
             try validations.add(\.password, .count(5...))

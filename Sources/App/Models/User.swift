@@ -11,26 +11,31 @@ import Authentication
 
 final class User: Codable {
     var id: Int?
+    var email: String
     var username: String
     var password: String
 
-    init(username: String, password: String) {
+    init(email: String, username: String, password: String) {
+        self.email = email
         self.username = username
         self.password = password
     }
 
-    init(id: Int?, username: String, password: String) {
+    init(id: Int?, email: String, username: String, password: String) {
         self.id = id
+        self.email = email
         self.username = username
         self.password = password
     }
 
     final class Public: Codable {
         var id: Int?
+        var email: String
         var username: String
 
-        init(id: Int?, username: String) {
+        init(id: Int?, email: String, username: String) {
             self.id = id
+            self.email = email
             self.username = username
         }
     }
@@ -42,7 +47,7 @@ extension User.Public: Content {}
 
 extension User: BasicAuthenticatable {
     static var usernameKey: UsernameKey {
-        return \User.username
+        return \User.email
     }
 
     static var passwordKey: PasswordKey {
@@ -54,14 +59,14 @@ extension User: Migration {
     static func prepare(on conn: MySQLConnection) -> Future<Void> {
         return Database.create(self, on: conn) { (builder) in
             try addProperties(to: builder)
-            builder.unique(on: \.username)
+            builder.unique(on: \.email)
         }
     }
 }
 
 extension User {
     func toPublic() -> User.Public {
-        return User.Public(id: id, username: username)
+        return User.Public(id: id, email: email, username: username)
     }
 }
 

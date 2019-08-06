@@ -29,6 +29,11 @@
                         <a href="/event" class="nav-link">New event</a>
                     </li>
                     }
+                    #if(showFishingEvents) {
+                    <li class="nav-item #if(title == "My events"){active}">
+                        <a href="/event" class="nav-link">My events</a>
+                    </li>
+                    }
                 </ul>
             <div>
                 #if(userLoggedIn) {

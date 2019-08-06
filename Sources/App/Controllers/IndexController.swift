@@ -22,14 +22,34 @@ struct IndexController: RouteCollection {
 
     func indexHandler(_ req: Request) throws -> Future<View> {
         let userLoggedIn = try req.isAuthenticated(User.self)
+
         let showCookieMessage =
             req.http.cookies["cookies-accepted"] == nil
-        let context = IndexContext(
-            title: "Fishing site!",
-            userLoggedIn: userLoggedIn,
-            showCookieMessage: showCookieMessage)
 
-        return try req.view().render("index", context)
+        if userLoggedIn, let userId = try req.requireAuthenticated(User.self).id {
+            return UserEvent
+                .query(on: req)
+                .filter(\.userId == userId)
+                .first()
+                .map(to: Bool.self) { $0 != nil }
+                .flatMap(to: View.self) { value in
+                    let context = IndexContext(
+                        title: "Fishing site!",
+                        userLoggedIn: userLoggedIn,
+                        showCookieMessage: showCookieMessage,
+                        showFishingEvents: value
+                    )
+                    return try req.view().render("index", context)
+            }
+        } else {
+            let context = IndexContext(
+                title: "Fishing site!",
+                userLoggedIn: userLoggedIn,
+                showCookieMessage: showCookieMessage,
+                showFishingEvents: false)
+
+            return try req.view().render("index", context)
+        }
     }
 
     func loginHandler(_ req: Request) throws -> Future<View> {
@@ -130,6 +150,7 @@ struct IndexContext: Encodable {
     let title: String
     let userLoggedIn: Bool
     let showCookieMessage: Bool
+    let showFishingEvents: Bool
 }
 
 struct LoginContext: Encodable {

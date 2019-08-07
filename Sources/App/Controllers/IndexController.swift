@@ -1,6 +1,7 @@
 import Vapor
 import Leaf
 import Authentication
+import Fluent
 
 struct IndexController: RouteCollection {
 
@@ -18,6 +19,8 @@ struct IndexController: RouteCollection {
                                use: registerPostHandler)
         authSessionRoutes.get("event", use: eventHandler)
         authSessionRoutes.post(EventPostData.self, at: "event", use: eventPostHandler)
+
+        authSessionRoutes.get("eventList", use: eventListHandler)
     }
 
     func indexHandler(_ req: Request) throws -> Future<View> {
@@ -133,15 +136,36 @@ struct IndexController: RouteCollection {
         return event
             .save(on: req)
             .map(to: UserEvent.self) { event in
-                guard let userId = user.id, let eventId = event.id else {
+
+                guard let eventId = event.id else {
                     throw Abort(.badRequest, reason: "Could not create event: \(event.name)")
                 }
-                return UserEvent(userId: userId, eventId: eventId)
+                return try UserEvent(userId: user.requireID(), eventId: eventId)
             }
             .save(on: req)
             .map(to: Response.self) { userEvent in
                 // TODO: change / to the event created page with correct content!
                 return req.redirect(to: "/")
+            }
+    }
+
+    func eventListHandler(_ req: Request) throws -> Future<View> {
+        let user = try req.requireAuthenticated(User.self)
+
+        return try UserEvent
+            .query(on: req)
+            .filter(\.userId == user.requireID())
+            .all()
+            .flatMap(to: View.self) { userEvents in
+                return userEvents
+                    .map { $0.eventId }
+                    .map { id -> Future<Event?> in
+                        return Event.query(on: req)
+                            .filter(\.id == id)
+                            .first()
+                    }.flatMap(to: View.self, on: req) { events in
+                        return try req.view().render("eventList", EventListContext(events: events.compactMap { $0 }))
+                }
             }
     }
 }
@@ -212,4 +236,9 @@ struct EventContext: Encodable {
 struct EventPostData: Content {
     let name: String
     let code: String
+}
+
+struct EventListContext: Encodable {
+    let title = "My events"
+    let events: [Event]
 }

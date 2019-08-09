@@ -7,4 +7,7 @@ public func routes(_ router: Router) throws {
 
     let userController = UserController()
     try router.register(collection: userController)
+
+    let eventController = EventController()
+    try router.register(collection: eventController)
 }

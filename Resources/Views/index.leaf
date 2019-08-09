@@ -1,6 +1,9 @@
 #set("content") {
-
-<h1>#(title)</h1>
-
+<div class="description">
+    <h1>#(title)</h1>
+    <p>Create a fishing trip and invite your friends for a quest for the biggest fish!</p>
+    <p>List all the catches and stay on top of who is winning!</p>
+    <p>Before the first cast place your educated guestimates for different species and see who got them the closest!</p>
+</div>
 }
 #embed("base")

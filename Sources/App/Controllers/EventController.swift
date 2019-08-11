@@ -30,15 +30,8 @@ struct EventController: RouteCollection {
         let event = Event(name: data.name, code: data.code)
         return event
             .save(on: req)
-            .map(to: UserEvent.self) { event in
-
-                guard let eventId = event.id else {
-                    throw Abort(.badRequest, reason: "Could not create event: \(event.name)")
-                }
-                return try UserEvent(userId: user.requireID(), eventId: eventId)
-            }
             .save(on: req)
-            .map(to: Response.self) { userEvent in
+            .map(to: Response.self) { _ in
                 // TODO: change / to the event created page with correct content!
                 return req.redirect(to: "/")
         }
@@ -47,19 +40,11 @@ struct EventController: RouteCollection {
     func eventListHandler(_ req: Request) throws -> Future<View> {
         let user = try req.requireAuthenticated(User.self)
 
-        return try UserEvent
+        return try user.events
             .query(on: req)
-            .filter(\.userId == user.requireID())
             .all()
-            .flatMap(to: View.self) { userEvents in
-                return userEvents
-                    .map { userEvent -> Future<Event?> in
-                        return Event.query(on: req)
-                            .filter(\.id == userEvent.id)
-                            .first()
-                    }.flatMap(to: View.self, on: req) { events in
-                        return try req.view().render("eventList", EventListContext(events: events.compactMap { $0 }))
-                }
+            .flatMap(to: View.self) { events in
+                return try req.view().render("eventList", EventListContext(events: events))
         }
     }
 

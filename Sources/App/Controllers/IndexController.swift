@@ -25,18 +25,17 @@ struct IndexController: RouteCollection {
         let showCookieMessage =
             req.http.cookies["cookies-accepted"] == nil
 
-        if userLoggedIn, let userId = try req.requireAuthenticated(User.self).id {
-            return UserEvent
+        if userLoggedIn {
+            let user = try req.requireAuthenticated(User.self)
+            return try user.events
                 .query(on: req)
-                .filter(\.userId == userId)
-                .first()
-                .map(to: Bool.self) { $0 != nil }
+                .all()
                 .flatMap(to: View.self) { value in
                     let context = IndexContext(
                         title: "Fishing site!",
                         userLoggedIn: userLoggedIn,
                         showCookieMessage: showCookieMessage,
-                        showFishingEvents: value
+                        showFishingEvents: (value.count > 0) ? true : false
                     )
                     return try req.view().render("index", context)
             }

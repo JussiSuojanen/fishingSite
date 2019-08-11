@@ -26,6 +26,12 @@ final class Event: Codable {
     }
 }
 
+extension Event {
+    var users: Siblings<Event, User, EventUserPivot> {
+        return siblings()
+    }
+}
+
 extension Event: MySQLModel {}
 extension Event: Parameter {}
 extension Event: Content {}

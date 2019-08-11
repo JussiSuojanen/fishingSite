@@ -13,9 +13,7 @@
         #for(event in events) {
         <tr>
             <td>
-                <a href="/event/#(event.id)">
-                    #(event.name)
-                </a>
+                <a href="singleEvent/#(event.id)"> #(event.name) </a>
             </td>
             <td>#(event.code)</td>
         </tr>

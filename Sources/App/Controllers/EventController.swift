@@ -16,7 +16,7 @@ struct EventController: RouteCollection {
         authSessionRoutes.get("event", use: eventHandler)
         authSessionRoutes.post(EventPostData.self, at: "event", use: eventPostHandler)
         authSessionRoutes.get("eventList", use: eventListHandler)
-
+        authSessionRoutes.get("singleEvent", Event.parameter, use: singleEventHandler)
     }
 
     func eventHandler(_ req: Request) throws -> Future<View> {
@@ -62,6 +62,16 @@ struct EventController: RouteCollection {
                 }
         }
     }
+
+    func singleEventHandler(_ req: Request) throws -> Future<View> {
+        return try req
+            .parameters
+            .next(Event.self)
+            .flatMap(to: View.self) { event in
+                return try req
+                    .view()
+                    .render("singleEvent", SingleEventContext(event: event))
+        }
     }
 
 }
@@ -78,4 +88,8 @@ struct EventPostData: Content {
 struct EventListContext: Encodable {
     let title = "My events"
     let events: [Event]
+}
+
+struct SingleEventContext: Encodable {
+    let event: Event
 }

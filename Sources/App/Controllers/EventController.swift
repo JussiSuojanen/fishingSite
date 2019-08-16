@@ -30,7 +30,6 @@ struct EventController: RouteCollection {
         let event = Event(name: data.name, code: data.code)
         return event
             .save(on: req)
-            .save(on: req)
             .map(to: Response.self) { _ in
                 // TODO: change / to the event created page with correct content!
                 return req.redirect(to: "/")
@@ -52,10 +51,19 @@ struct EventController: RouteCollection {
         return try req
             .parameters
             .next(Event.self)
-            .flatMap(to: View.self) { event in
-                return try req
-                    .view()
-                    .render("singleEvent", SingleEventContext(event: event))
+            .flatMap { event in
+                return try Fish.query(on: req)
+                    .filter(\.eventId == event.requireID())
+                    .all()
+                    .flatMap(to: View.self) { fishes in
+                        return try req
+                            .view()
+                            .render("singleEvent",
+                                    SingleEventContext(
+                                        event: event,
+                                        fishes: fishes)
+                        )
+                }
         }
     }
 
@@ -77,4 +85,5 @@ struct EventListContext: Encodable {
 
 struct SingleEventContext: Encodable {
     let event: Event
+    let fishes: [Fish]
 }

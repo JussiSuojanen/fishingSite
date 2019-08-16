@@ -1,0 +1,29 @@
+<div id="table" class="table-editable">
+    <span class="table-add glyphicon glyphicon-plus"></span>
+    <table class="table table-bordered table-hover"  cellspacing="0" width="100%">
+        <thead class="thead-light">
+            <tr>
+                <th>Fish type</th>
+                <th>Cm</th>
+                <th>Kg</th>
+                <th>Fisherman</th>
+                <th>Remove</th>
+            </tr>
+        </thead>
+        <tbody>
+            #for(fish in fishes) {
+            <tr>
+                <td>#(fish.fishType)</td>
+                <td>#(fish.lengthInCm)</td>
+                <td>#(fish.weightInKg)</td>
+                <td>#(fish.fisherman)</td>
+                <td>
+                    <span class="table-remove"><button type="button"
+                        class="btn btn-danger btn-rounded btn-sm my-0">Remove</button>
+                    </span>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

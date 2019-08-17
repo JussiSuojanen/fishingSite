@@ -30,6 +30,9 @@ extension Event {
     var users: Siblings<Event, User, EventUserPivot> {
         return siblings()
     }
+    var fishes: Siblings<Event, Fish, EventFishPivot> {
+        return siblings()
+    }
 }
 
 extension Event: MySQLModel {}

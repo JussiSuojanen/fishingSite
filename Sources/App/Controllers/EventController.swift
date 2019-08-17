@@ -31,11 +31,16 @@ struct EventController: RouteCollection {
         return event
             .save(on: req)
             .flatMap(to: View.self) { _ in
-                return try req
-                    .view()
-                    .render("eventList",
-                            EventListContext(events: user.events.query(on: req).all())
-                    )
+                return user.events
+                    .attach(event, on: req)
+                    .flatMap(to: View.self) { _ in
+                        return try req
+                            .view()
+                            .render("eventList",
+                                    EventListContext(events: user.events.query(on: req).all()
+                            )
+                        )
+                }
         }
     }
 
@@ -54,22 +59,17 @@ struct EventController: RouteCollection {
         return try req
             .parameters
             .next(Event.self)
-            .flatMap { event in
-                return try Fish.query(on: req)
-                    .filter(\.eventId == event.requireID())
-                    .all()
-                    .flatMap(to: View.self) { fishes in
-                        return try req
-                            .view()
-                            .render("singleEvent",
-                                    SingleEventContext(
-                                        event: event,
-                                        fishes: fishes)
+            .flatMap(to: View.self) { event in
+                return try req
+                    .view()
+                    .render("singleEvent",
+                            SingleEventContext(
+                                event: event,
+                                fishes: event.fishes.query(on: req).all()
                         )
-                }
+                )
         }
     }
-
 }
 
 struct EventContext: Encodable {
@@ -88,5 +88,5 @@ struct EventListContext: Encodable {
 
 struct SingleEventContext: Encodable {
     let event: Event
-    let fishes: [Fish]
+    let fishes: Future<[Fish]>
 }

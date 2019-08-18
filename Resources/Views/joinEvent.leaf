@@ -1,0 +1,17 @@
+#set("content") {
+<h1>#(title)</h1>
+
+<form method="post">
+    <div class="form-group">
+        <label for="code">Enter the event code to join the event</label>
+        <input type="text" name="code" class="form-control"
+        id="code"/>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Join event
+    </button>
+</form>
+}
+#embed("base")
+

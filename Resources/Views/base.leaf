@@ -25,6 +25,9 @@
                     </li>
                     }
                     #if(userLoggedIn) {
+                    <li class="nav-item #if(title == "Join event"){active}">
+                        <a href="/joinEvent" class="nav-link">Join event</a>
+                    </li>
                     <li class="nav-item #if(title == "New event"){active}">
                         <a href="/event" class="nav-link">New event</a>
                     </li>

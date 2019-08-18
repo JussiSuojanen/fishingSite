@@ -14,13 +14,19 @@ struct EventController: RouteCollection {
             router.grouped(User.authSessionsMiddleware())
 
         authSessionRoutes.get("event", use: eventHandler)
+        authSessionRoutes.get("joinEvent", use: joinEventHandler)
         authSessionRoutes.post(EventPostData.self, at: "event", use: eventPostHandler)
+        authSessionRoutes.post(EventJoinPostData.self, at: "joinEvent", use: eventJoinPostHandler)
         authSessionRoutes.get("eventList", use: eventListHandler)
         authSessionRoutes.get("singleEvent", Event.parameter, use: singleEventHandler)
     }
 
     func eventHandler(_ req: Request) throws -> Future<View> {
         return try req.view().render("event", EventContext())
+    }
+
+    func joinEventHandler(_ req: Request) throws -> Future<View> {
+        return try req.view().render("joinEvent", JoinEventContext())
     }
 
     func eventPostHandler(_ req: Request, data: EventPostData) throws -> Future<View> {
@@ -39,6 +45,29 @@ struct EventController: RouteCollection {
                             .render("eventList",
                                     EventListContext(events: user.events.query(on: req).all()
                             )
+                        )
+                }
+        }
+    }
+
+    func eventJoinPostHandler(_ req: Request, data: EventJoinPostData) throws -> Future<View> {
+        let user = try req.requireAuthenticated(User.self)
+        return Event
+            .query(on: req)
+            .filter(\.code == data.code)
+            .first()
+            .flatMap(to: View.self) { event in
+                guard let event = event else {
+                    throw Abort(.internalServerError)
+                }
+
+                return user.events
+                    .attach(event, on: req)
+                    .flatMap(to: View.self) { _ in
+                        return try req
+                            .view()
+                            .render("eventList",
+                                    EventListContext(events: user.events.query(on: req).all())
                         )
                 }
         }
@@ -75,9 +104,16 @@ struct EventController: RouteCollection {
 struct EventContext: Encodable {
     let title = "Create new event"
 }
+struct JoinEventContext: Encodable {
+    let title = "Join event"
+}
 
 struct EventPostData: Content {
     let name: String
+    let code: String
+}
+
+struct EventJoinPostData: Content {
     let code: String
 }
 

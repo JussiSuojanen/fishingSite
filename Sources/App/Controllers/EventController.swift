@@ -23,28 +23,31 @@ struct EventController: RouteCollection {
         return try req.view().render("event", EventContext())
     }
 
-    func eventPostHandler(_ req: Request, data: EventPostData) throws -> Future<Response> {
+    func eventPostHandler(_ req: Request, data: EventPostData) throws -> Future<View> {
         // TODO: Should handle unique event name error?
         let user = try req.requireAuthenticated(User.self)
 
         let event = Event(name: data.name, code: data.code)
         return event
             .save(on: req)
-            .map(to: Response.self) { _ in
-                // TODO: change / to the event created page with correct content!
-                return req.redirect(to: "/")
+            .flatMap(to: View.self) { _ in
+                return try req
+                    .view()
+                    .render("eventList",
+                            EventListContext(events: user.events.query(on: req).all())
+                    )
         }
     }
 
     func eventListHandler(_ req: Request) throws -> Future<View> {
         let user = try req.requireAuthenticated(User.self)
-
-        return try user.events
-            .query(on: req)
-            .all()
-            .flatMap(to: View.self) { events in
-                return try req.view().render("eventList", EventListContext(events: events))
-        }
+        return try req
+            .view()
+            .render(
+                "eventList",
+                EventListContext(
+                    events: user.events.query(on: req).all())
+        )
     }
 
     func singleEventHandler(_ req: Request) throws -> Future<View> {
@@ -80,7 +83,7 @@ struct EventPostData: Content {
 
 struct EventListContext: Encodable {
     let title = "My events"
-    let events: [Event]
+    let events: Future<[Event]>
 }
 
 struct SingleEventContext: Encodable {

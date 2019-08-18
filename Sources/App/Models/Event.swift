@@ -44,6 +44,7 @@ extension Event: Migration {
         return Database.create(self, on: conn) { builder in
             try addProperties(to: builder)
             builder.unique(on: \.name)
+            builder.unique(on: \.code)
         }
     }
 }

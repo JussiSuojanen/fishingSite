@@ -22,7 +22,7 @@ struct FishController: RouteCollection {
             .next(Event.self)
             .flatMap(to: View.self) { event in
                 return try Fish(eventId: event.requireID(),
-                                fishType: .grayling,
+                                fishType: "what kind of a fish?",
                                 lengthInCm: 0,
                                 weightInKg: 0,
                                 fisherman: "who caught the fish?"

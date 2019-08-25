@@ -9,26 +9,26 @@ import Vapor
 import FluentMySQL
 
 final class Fish: Codable {
-    enum FishType: String, MySQLEnumType, Codable {
-        static func reflectDecoded() throws -> (FishType, FishType) {
-            return(.grayling, .trout)
-        }
-
-        case grayling
-        case trout
-        case salmon
-        case char
-        case piker
-    }
+//    enum FishType: String, MySQLEnumType, Codable {
+//        static func reflectDecoded() throws -> (FishType, FishType) {
+//            return(.grayling, .trout)
+//        }
+//
+//        case grayling
+//        case trout
+//        case salmon
+//        case char
+//        case piker
+//    }
 
     var id: Int?
     var eventId: Int
-    var fishType: FishType
+    var fishType: String
     var lengthInCm: Float?
     var weightInKg: Float?
     var fisherman: String
 
-    init(eventId: Int, fishType: FishType, lengthInCm: Float?, weightInKg: Float?, fisherman: String) {
+    init(eventId: Int, fishType: String, lengthInCm: Float?, weightInKg: Float?, fisherman: String) {
         self.eventId = eventId
         self.fishType = fishType
         self.lengthInCm = lengthInCm
@@ -36,7 +36,7 @@ final class Fish: Codable {
         self.fisherman = fisherman
     }
 
-    init(id: Int?, eventId: Int, fishType: FishType, lengthInCm: Float?, weightInKg: Float?, fisherman: String) {
+    init(id: Int?, eventId: Int, fishType: String, lengthInCm: Float?, weightInKg: Float?, fisherman: String) {
         self.id = id
         self.eventId = eventId
         self.fishType = fishType

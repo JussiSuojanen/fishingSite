@@ -13,8 +13,17 @@ struct FishController: RouteCollection {
             router.grouped(User.authSessionsMiddleware())
 
         authSessionRoutes.post("singleEvent", Event.parameter, use: addNewRowHandler)
+        authSessionRoutes.get("singleEvent", Event.parameter, "fish", use: fishHandler)
     }
 
+    func fishHandler(_ req: Request) throws -> Future<View> {
+        return try req
+            .parameters
+            .next(Event.self)
+            .flatMap(to: View.self) { event in
+                return try req.view().render("fish", FishContext(event: event))
+        }
+    }
     func addNewRowHandler(_ req: Request) throws -> Future<View> {
         //let user = try req.requireAuthenticated(User.self)
         return try req
@@ -45,4 +54,8 @@ struct FishController: RouteCollection {
                 }
         }
     }
+}
+
+struct FishContext: Encodable {
+    let event: Event
 }

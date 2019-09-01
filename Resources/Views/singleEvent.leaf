@@ -1,8 +1,9 @@
 
 #set("content") {
-<h1>#(event.name)</h1>
-<h2>#(event.code)</h2>
-
+<h1>#(event.name) join with code: #(event.code) </h1>
+<form action="#(event.id)/fish">
+    <button type="submit" class="btn btn-primary">Add fish</button>
+</form>
 #embed("fishTable")
 
 }

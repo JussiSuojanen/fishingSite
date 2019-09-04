@@ -14,6 +14,7 @@ struct FishController: RouteCollection {
 
         authSessionRoutes.post("singleEvent", Event.parameter, use: addNewRowHandler)
         authSessionRoutes.get("singleEvent", Event.parameter, "fish", use: fishHandler)
+        authSessionRoutes.post(PostFishData.self, at: "addFish", use: postFishHandler)
     }
 
     func fishHandler(_ req: Request) throws -> Future<View> {
@@ -24,6 +25,30 @@ struct FishController: RouteCollection {
                 return try req.view().render("fish", FishContext(event: event))
         }
     }
+
+    func postFishHandler(_ req: Request, data: PostFishData) throws -> Future<Response> {
+        return Event
+            .query(on: req)
+            .filter(\.id == data.eventId)
+            .first()
+            .flatMap(to: Response.self) { event in
+                guard let unwrappedEvent: Event = event else {
+                    throw Abort(.badRequest, reason: "Internal server error, matching event not found!")
+                }
+                return Fish(eventId: data.eventId,
+                            fishType: data.fishType,
+                            lengthInCm: data.lengthInCm,
+                            weightInKg: data.weightInKg,
+                            fisherman: data.fisherman)
+                    .save(on: req)
+                    .flatMap(to: Response.self) { fish in
+                        return unwrappedEvent.fishes.attach(fish, on: req).map(to: Response.self) { _ in
+                            return req.redirect(to: "singleEvent/\(data.eventId)")
+                        }
+                }
+        }
+    }
+
     func addNewRowHandler(_ req: Request) throws -> Future<View> {
         //let user = try req.requireAuthenticated(User.self)
         return try req
@@ -48,14 +73,21 @@ struct FishController: RouteCollection {
                                             SingleEventContext(
                                                 event: event,
                                                 fishes: event.fishes.query(on: req).all()
-                                    )
+                                        )
                                 )
                         }
                 }
-        }
     }
 }
 
 struct FishContext: Encodable {
     let event: Event
+}
+
+struct PostFishData: Content {
+    let eventId: Int
+    let fishType: String
+    let lengthInCm: Float?
+    let weightInKg: Float?
+    let fisherman: String
 }

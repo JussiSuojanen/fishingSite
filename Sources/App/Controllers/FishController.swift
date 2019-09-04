@@ -15,6 +15,7 @@ struct FishController: RouteCollection {
         authSessionRoutes.post("singleEvent", Event.parameter, use: addNewRowHandler)
         authSessionRoutes.get("singleEvent", Event.parameter, "fish", use: fishHandler)
         authSessionRoutes.post(PostFishData.self, at: "addFish", use: postFishHandler)
+        authSessionRoutes.get(Fish.parameter, "delete", use: deleteFishHandler)
     }
 
     func fishHandler(_ req: Request) throws -> Future<View> {
@@ -47,6 +48,19 @@ struct FishController: RouteCollection {
                         }
                 }
         }
+    }
+
+    func deleteFishHandler(_ req: Request) throws -> Future<Response> {
+        return try req
+            .parameters
+            .next(Fish.self)
+            .flatMap(to: Response.self) { fish in
+                return fish
+                    .delete(on: req)
+                    .map(to: Response.self) { _ in
+                        return req.redirect(to: "/singleEvent/\(fish.eventId)")
+                }
+            }
     }
 
     func addNewRowHandler(_ req: Request) throws -> Future<View> {

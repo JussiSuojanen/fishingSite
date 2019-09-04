@@ -17,9 +17,11 @@
                 <td>#(fish.lengthInCm)</td>
                 <td>#(fish.weightInKg)</td>
                 <td>#(fish.fisherman)</td>
-                <td>
-                    <span class="table-remove"><button type="button"
-                        class="btn btn-danger btn-rounded btn-sm my-0">Remove</button>
+                <td width=100>
+                    <span class="table-remove">
+                        <a href="/#(fish.id)/delete" class="btn btn-danger btn-sm">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
                     </span>
                 </td>
             </tr>

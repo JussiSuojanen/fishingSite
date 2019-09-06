@@ -16,6 +16,8 @@ struct FishController: RouteCollection {
         authSessionRoutes.get("singleEvent", Event.parameter, "fish", use: fishHandler)
         authSessionRoutes.post(PostFishData.self, at: "addFish", use: postFishHandler)
         authSessionRoutes.get(Fish.parameter, "delete", use: deleteFishHandler)
+        authSessionRoutes.get("singleEvent", "edit", Fish.parameter, use: editFishHandler)
+        authSessionRoutes.post("singleEvent", "edit", Fish.parameter, use: editFishPostHandler)
     }
 
     func fishHandler(_ req: Request) throws -> Future<View> {
@@ -63,6 +65,33 @@ struct FishController: RouteCollection {
             }
     }
 
+    func editFishHandler(_ req: Request) throws -> Future<View> {
+        return try req
+            .parameters
+            .next(Fish.self)
+            .flatMap { fish in
+                return try req
+                    .view()
+                    .render("editFish", EditFishContext(fish: fish))
+        }
+    }
+
+    func editFishPostHandler(_ req: Request) throws -> Future<Response> {
+        return try flatMap(
+            to: Response.self,
+            req.parameters.next(Fish.self),
+            req.content.decode(Fish.self)
+        ) { fish, data in
+            fish.fishType = data.fishType
+            fish.lengthInCm = data.lengthInCm
+            fish.weightInKg = data.weightInKg
+            fish.fisherman = data.fisherman
+            return fish.save(on: req).map { _ in
+                return req.redirect(to: "/singleEvent/\(fish.eventId)")
+            }
+        }
+    }
+
     func addNewRowHandler(_ req: Request) throws -> Future<View> {
         //let user = try req.requireAuthenticated(User.self)
         return try req
@@ -104,4 +133,8 @@ struct PostFishData: Content {
     let lengthInCm: Float?
     let weightInKg: Float?
     let fisherman: String
+}
+
+struct EditFishContext: Encodable {
+    let fish: Fish
 }

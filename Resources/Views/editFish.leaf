@@ -1,0 +1,36 @@
+
+#set("content") {
+<h1>#(title)</h1>
+#if(message) {
+<div class="alert alert-danger" role="alert">
+    Please fix the following errors:<br />
+    #(message)
+</div>
+}
+<form method="post" action="/singleEvent/edit/#(fish.id)">
+    <div class="form-group" style="display: none;">
+        <input type="number" name="eventId" class="form-control" id="eventId" value="#(fish.eventId)"/>
+    </div>
+    <div class="form-group">
+        <label for="fishType">Fish type</label>
+        <input type="text" name="fishType" class="form-control" id="fishType" value="#(fish.fishType)"/>
+    </div>
+    <div class="form-group">
+        <label for="lengthInCm">Length</label>
+        <input type="number" name="lengthInCm" class="form-control" id="lengthInCm" value="#(fish.lengthInCm)"/>
+    </div>
+    <div class="form-group">
+        <label for="weightInKg">Weight</label>
+        <input type="number" name="weightInKg" class="form-control" id="weightInKg" value="#(fish.weightInKg)"/>
+    </div>
+    <div class="form-group">
+        <label for="fisherman">Fisherman</label>
+        <input type="text" name="fisherman" class="form-control" id="fisherman"  value="#(fish.fisherman)"/>
+    </div>
+    <button type="submit" class="btn btn-primary">
+        Save
+    </button>
+</form>
+}
+#embed("base")
+

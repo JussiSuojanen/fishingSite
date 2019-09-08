@@ -7,18 +7,19 @@
 
 import Vapor
 import FluentMySQL
+import Authentication
 
 struct EventController: RouteCollection {
     func boot(router: Router) throws {
         let authSessionRoutes =
             router.grouped(User.authSessionsMiddleware())
-
-        authSessionRoutes.get("event", use: eventHandler)
-        authSessionRoutes.get("joinEvent", use: joinEventHandler)
-        authSessionRoutes.post(EventPostData.self, at: "event", use: eventPostHandler)
-        authSessionRoutes.post(EventJoinPostData.self, at: "joinEvent", use: eventJoinPostHandler)
-        authSessionRoutes.get("eventList", use: eventListHandler)
-        authSessionRoutes.get("singleEvent", Event.parameter, use: singleEventHandler)
+        let protectedRoutes = authSessionRoutes.grouped(RedirectMiddleware<User>(path: "/login"))
+        protectedRoutes.get("event", use: eventHandler)
+        protectedRoutes.get("joinEvent", use: joinEventHandler)
+        protectedRoutes.post(EventPostData.self, at: "event", use: eventPostHandler)
+        protectedRoutes.post(EventJoinPostData.self, at: "joinEvent", use: eventJoinPostHandler)
+        protectedRoutes.get("eventList", use: eventListHandler)
+        protectedRoutes.get("singleEvent", Event.parameter, use: singleEventHandler)
     }
 
     func eventHandler(_ req: Request) throws -> Future<View> {

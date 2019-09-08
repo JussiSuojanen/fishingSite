@@ -6,18 +6,20 @@
 //
 
 import Vapor
+import Authentication
 
 struct FishController: RouteCollection {
     func boot(router: Router) throws {
         let authSessionRoutes =
             router.grouped(User.authSessionsMiddleware())
-
-        authSessionRoutes.post("singleEvent", Event.parameter, use: addNewRowHandler)
-        authSessionRoutes.get("singleEvent", Event.parameter, "fish", use: fishHandler)
-        authSessionRoutes.post(PostFishData.self, at: "addFish", use: postFishHandler)
-        authSessionRoutes.get(Fish.parameter, "delete", use: deleteFishHandler)
-        authSessionRoutes.get("singleEvent", "edit", Fish.parameter, use: editFishHandler)
-        authSessionRoutes.post("singleEvent", "edit", Fish.parameter, use: editFishPostHandler)
+        
+        let protectedRoutes = authSessionRoutes.grouped(RedirectMiddleware<User>(path: "/login"))
+        protectedRoutes.post("singleEvent", Event.parameter, use: addNewRowHandler)
+        protectedRoutes.get("singleEvent", Event.parameter, "fish", use: fishHandler)
+        protectedRoutes.post(PostFishData.self, at: "addFish", use: postFishHandler)
+        protectedRoutes.get(Fish.parameter, "delete", use: deleteFishHandler)
+        protectedRoutes.get("singleEvent", "edit", Fish.parameter, use: editFishHandler)
+        protectedRoutes.post("singleEvent", "edit", Fish.parameter, use: editFishPostHandler)
     }
 
     func fishHandler(_ req: Request) throws -> Future<View> {

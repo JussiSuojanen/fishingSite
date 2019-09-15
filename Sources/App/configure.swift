@@ -38,6 +38,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     migrations.add(model: Fish.self, database: .mysql)
     migrations.add(model: EventFishPivot.self, database: .mysql)
     migrations.add(model: Estimate.self, database: .mysql)
+    migrations.add(model: EventEstimatePivot.self, database: .mysql)
     services.register(migrations)
 
     config.prefer(LeafRenderer.self, for: ViewRenderer.self)

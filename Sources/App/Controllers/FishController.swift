@@ -14,7 +14,6 @@ struct FishController: RouteCollection {
             router.grouped(User.authSessionsMiddleware())
         
         let protectedRoutes = authSessionRoutes.grouped(RedirectMiddleware<User>(path: "/login"))
-        protectedRoutes.post("singleEvent", Event.parameter, use: addNewRowHandler)
         protectedRoutes.get("singleEvent", Event.parameter, "fish", use: fishHandler)
         protectedRoutes.post(PostFishData.self, at: "addFish", use: postFishHandler)
         protectedRoutes.get(Fish.parameter, "delete", use: deleteFishHandler)
@@ -92,36 +91,6 @@ struct FishController: RouteCollection {
                 return req.redirect(to: "/singleEvent/\(fish.eventId)")
             }
         }
-    }
-
-    func addNewRowHandler(_ req: Request) throws -> Future<View> {
-        //let user = try req.requireAuthenticated(User.self)
-        return try req
-            .parameters
-            .next(Event.self)
-            .flatMap(to: View.self) { event in
-                return try Fish(eventId: event.requireID(),
-                                fishType: "what kind of a fish?",
-                                lengthInCm: 0,
-                                weightInKg: 0,
-                                fisherman: "who caught the fish?"
-                    )
-                    .save(on: req)
-                    .flatMap(to: View.self) { fish in
-                        return event
-                            .fishes
-                            .attach(fish, on: req)
-                            .flatMap(to: View.self) { _ in
-                                return try req
-                                    .view()
-                                    .render("singleEvent",
-                                            SingleEventContext(
-                                                event: event,
-                                                fishes: event.fishes.query(on: req).all()
-                                        )
-                                )
-                        }
-                }
     }
 }
 

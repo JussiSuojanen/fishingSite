@@ -95,7 +95,8 @@ struct EventController: RouteCollection {
                     .render("singleEvent",
                             SingleEventContext(
                                 event: event,
-                                fishes: event.fishes.query(on: req).all()
+                                fishes: event.fishes.query(on: req).all(),
+                                estimates: event.estimates.query(on: req).all()
                         )
                 )
         }
@@ -126,4 +127,5 @@ struct EventListContext: Encodable {
 struct SingleEventContext: Encodable {
     let event: Event
     let fishes: Future<[Fish]>
+    let estimates: Future<[Estimate]>
 }

@@ -6,5 +6,6 @@
 </form>
 #embed("fishTable")
 
+#embed("estimatesTable")
 }
 #embed("base")

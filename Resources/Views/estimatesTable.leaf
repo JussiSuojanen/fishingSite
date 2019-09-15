@@ -1,0 +1,52 @@
+
+<div id="table" class="table-editable">
+    <span class="table-add glyphicon glyphicon-plus"></span>
+    <table class="table table-bordered" cellspacing="0" width="100%">
+        <thead class="thead-light">
+            <tr align="center">
+                <th>Your name</th>
+                <th colspan="2" >Grayling</th>
+                <th colspan="2">Trout</th>
+                <th colspan="2">Salmon</th>
+                <th colspan="2">Char</th>
+                <th>Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr align="center">
+                <td></td>
+                <td>Cm</td>
+                <td>Kg</td>
+                <td>Cm</td>
+                <td>Kg</td>
+                <td>Cm</td>
+                <td>Kg</td>
+                <td>Cm</td>
+                <td>Kg</td>
+            </tr>
+            #for(estimate in estimates) {
+            <tr align="center">
+                <td>#(estimate.guesserName)</td>
+                <td>#(estimate.graylingInCm)</td>
+                <td>#(estimate.graylingInKg)</td>
+                <td>#(estimate.troutInCm)</td>
+                <td>#(estimate.troutInKg)</td>
+                <td>#(estimate.salmonInCm)</td>
+                <td>#(estimate.salmonInKg)</td>
+                <td>#(estimate.charInCm)</td>
+                <td>#(estimate.charInKg)</td>
+                <td width=100>
+                    <span class="table-remove">
+                        <a href="/#(estimate.id)/delete" class="btn btn-danger btn-sm">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                        <a href="/singleEvent/edit/#(estimate.id)" class="btn btn-primary btn-sm">
+                            <i class="fas fa-pen"></i>
+                        </a>
+                    </span>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

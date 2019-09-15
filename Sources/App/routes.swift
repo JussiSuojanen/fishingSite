@@ -13,4 +13,6 @@ public func routes(_ router: Router) throws {
 
     let fishController = FishController()
     try router.register(collection: fishController)
+
+    try router.register(collection: EstimateController())
 }

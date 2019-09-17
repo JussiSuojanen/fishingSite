@@ -16,6 +16,7 @@ struct EstimateController: RouteCollection {
         let protectedRoutes = authSessionRoutes.grouped(RedirectMiddleware<User>(path: "/login"))
         protectedRoutes.get("singleEvent", Event.parameter, "estimate", use: estimateHandler)
         protectedRoutes.post(PostEstimateData.self, at: "addEstimate", use: postEstimateHandler)
+        protectedRoutes.get("deleteEstimate", Estimate.parameter, use: deleteEstimateHandler)
         protectedRoutes.get("singleEvent", "editEstimate", Estimate.parameter, use: editEstimateHandler)
         protectedRoutes.post("singleEvent", "editEstimate", Estimate.parameter, use: editEstimatePostHandler)
     }
@@ -53,6 +54,19 @@ struct EstimateController: RouteCollection {
                         return unwrappedEvent.estimates.attach(estimate, on: req).map(to: Response.self) { _ in
                             return req.redirect(to: "singleEvent/\(data.eventId)")
                         }
+                }
+        }
+    }
+
+    func deleteEstimateHandler(_ req: Request) throws -> Future<Response> {
+        return try req
+            .parameters
+            .next(Estimate.self)
+            .flatMap(to: Response.self) { estimate in
+                return estimate
+                    .delete(on: req)
+                    .map(to: Response.self) { _ in
+                        return req.redirect(to: "/singleEvent/\(estimate.eventId)")
                 }
         }
     }

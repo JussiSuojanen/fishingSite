@@ -37,7 +37,7 @@
                 <td>#(estimate.charInKg)</td>
                 <td width=100>
                     <span class="table-remove">
-                        <a href="/#(estimate.id)/delete" class="btn btn-danger btn-sm">
+                        <a href="/deleteEstimate/#(estimate.id)" class="btn btn-danger btn-sm">
                             <i class="fas fa-trash-alt"></i>
                         </a>
                         <a href="/singleEvent/editEstimate/#(estimate.id)" class="btn btn-primary btn-sm">

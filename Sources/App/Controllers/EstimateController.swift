@@ -16,6 +16,8 @@ struct EstimateController: RouteCollection {
         let protectedRoutes = authSessionRoutes.grouped(RedirectMiddleware<User>(path: "/login"))
         protectedRoutes.get("singleEvent", Event.parameter, "estimate", use: estimateHandler)
         protectedRoutes.post(PostEstimateData.self, at: "addEstimate", use: postEstimateHandler)
+        protectedRoutes.get("singleEvent", "editEstimate", Estimate.parameter, use: editEstimateHandler)
+        protectedRoutes.post("singleEvent", "editEstimate", Estimate.parameter, use: editEstimatePostHandler)
     }
 
     func estimateHandler(_ req: Request) throws -> Future<View> {
@@ -54,6 +56,41 @@ struct EstimateController: RouteCollection {
                 }
         }
     }
+
+    func editEstimateHandler(_ req: Request) throws -> Future<View> {
+        return try req
+            .parameters
+            .next(Estimate.self)
+            .flatMap { estimate in
+                return try req
+                    .view()
+                    .render("editEstimate", EditEstimateContext(estimate: estimate))
+        }
+    }
+
+
+    func editEstimatePostHandler(_ req: Request) throws -> Future<Response> {
+        return try flatMap(
+            to: Response.self,
+            req.parameters.next(Estimate.self),
+            req.content.decode(Estimate.self)
+        ) { estimate, data in
+
+            estimate.guesserName = data.guesserName
+            estimate.graylingInCm = data.graylingInCm
+            estimate.graylingInKg = data.graylingInKg
+            estimate.troutInCm = data.troutInKg
+            estimate.troutInKg = data.troutInKg
+            estimate.salmonInCm = data.salmonInCm
+            estimate.salmonInKg = data.salmonInKg
+            estimate.charInCm = data.charInCm
+            estimate.charInKg = data.charInKg
+
+            return estimate.save(on: req).map { _ in
+                return req.redirect(to: "/singleEvent/\(estimate.eventId)")
+            }
+        }
+    }
 }
 
 struct EstimateContext: Encodable {
@@ -71,4 +108,8 @@ struct PostEstimateData: Content {
     let salmonInKg: Float?
     let charInCm: Float?
     let charInKg: Float?
+}
+
+struct EditEstimateContext: Encodable {
+    let estimate: Estimate
 }

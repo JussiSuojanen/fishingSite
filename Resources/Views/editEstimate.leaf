@@ -1,0 +1,47 @@
+
+#set("content") {
+<h1>#(title)</h1>
+#if(message) {
+<div class="alert alert-danger" role="alert">
+    Please fix the following errors:<br />
+    #(message)
+</div>
+}
+<form method="post" action="/singleEvent/editEstimate/#(estimate.id)">
+    <div class="form-group" style="display: none;">
+        <input type="number" name="eventId" class="form-control" id="eventId" value="#(estimate.eventId)"/>
+    </div>
+    <div class="form-group">
+        <label for="guesserName">Name</label>
+        <input type="text" name="guesserName" class="form-control" id="guesserName" placeholder="Who is guessing?" value="#(estimate.guesserName)"/>
+    </div>
+    <div class="form-group">
+        <label>Grayling</label>
+        <input type="number" step="0.1" name="graylingInCm" class="form-control" id="graylingInCm" placeholder="Cm" value="#(estimate.graylingInCm)"/>
+        <input type="number" step="0.1" name="graylingInKg" class="form-control" id="graylignInKg" placeholder="Kg" value="#(estimate.graylingInKg)"/>
+    </div>
+
+    <div class="form-group">
+        <label>Trout</label>
+        <input type="number" step="0.1" name="troutInCm" class="form-control" id="troutInCm" placeholder="Cm" value="#(estimate.troutInCm)"/>
+        <input type="number" step="0.1" name="troutInKg" class="form-control" id="troutInKg" placeholder="Kg" value="#(estimate.troutInKg)"/>
+    </div>
+    <div class="form-group">
+        <label>Salmon</label>
+        <input type="number" step="0.1" name="salmonInCm" class="form-control" id="salmonInCm" placeholder="Cm" value="#(estimate.salmonInCm)"/>
+        <input type="number" step="0.1" name="salmonInKg" class="form-control" id="salmonInKg" placeholder="Kg" value="#(estimate.salmonInKg)"/>
+    </div>
+
+    <div class="form-group">
+        <label>Char</label>
+        <input type="number" step="0.1" name="charInCm" class="form-control" id="charInCm" placeholder="Cm" value="#(estimate.charInCm)"/>
+        <input type="number" step="0.1" name="charInKg" class="form-control" id="charInKg" placeholder="Kg" value="#(estimate.charInKg)"/>
+    </div>
+    <button type="submit" class="btn btn-primary">
+        Save
+    </button>
+</form>
+}
+#embed("base")
+
+

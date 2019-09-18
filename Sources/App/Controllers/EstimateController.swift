@@ -26,11 +26,33 @@ struct EstimateController: RouteCollection {
             .parameters
             .next(Event.self)
             .flatMap(to: View.self) { event in
-                return try req.view().render("estimate", EstimateContext(event: event))
+                return try req
+                    .view()
+                    .render(
+                        "estimate",
+                        EstimateContext(
+                            event: event,
+                            message: req.query[String.self, at: "message"]
+                        )
+                )
         }
     }
 
     func postEstimateHandler(_ req: Request, data: PostEstimateData) throws -> Future<Response> {
+        do {
+            try data.validate()
+        } catch (let error) {
+            let redirect: String
+            if let error = error as? ValidationError,
+                let message = error.reason.addingPercentEncoding(
+                    withAllowedCharacters: .urlQueryAllowed) {
+                redirect = "/singleEvent/\(data.eventId)/estimate?message=\(message)"
+            } else {
+                redirect = "/singleEvent/\(data.eventId)/estimate?message=Unknown+error"
+            }
+            return req.future(req.redirect(to: redirect))
+        }
+
         return Event
             .query(on: req)
             .filter(\.id == data.eventId)
@@ -109,6 +131,12 @@ struct EstimateController: RouteCollection {
 
 struct EstimateContext: Encodable {
     let event: Event
+    let message: String?
+
+    init(event: Event, message: String? = nil) {
+        self.event = event
+        self.message = message
+    }
 }
 
 struct PostEstimateData: Content {
@@ -123,6 +151,17 @@ struct PostEstimateData: Content {
     let charInCm: Float?
     let charInKg: Float?
 }
+
+extension PostEstimateData: Validatable, Reflectable {
+    static func validations() throws
+        -> Validations<PostEstimateData> {
+            var validations = Validations(PostEstimateData.self)
+            try validations.add(\.name, .alphanumeric && .count(2...))
+
+            return validations
+    }
+}
+
 
 struct EditEstimateContext: Encodable {
     let estimate: Estimate

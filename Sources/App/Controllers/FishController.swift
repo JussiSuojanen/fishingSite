@@ -26,11 +26,33 @@ struct FishController: RouteCollection {
             .parameters
             .next(Event.self)
             .flatMap(to: View.self) { event in
-                return try req.view().render("fish", FishContext(event: event))
+                return try req
+                    .view()
+                    .render(
+                        "fish",
+                        FishContext(
+                            event: event,
+                            message: req.query[String.self, at: "message"]
+                        )
+                )
         }
     }
 
     func postFishHandler(_ req: Request, data: PostFishData) throws -> Future<Response> {
+        do {
+            try data.validate()
+        } catch (let error) {
+            let redirect: String
+            if let error = error as? ValidationError,
+                let message = error.reason.addingPercentEncoding(
+                    withAllowedCharacters: .urlQueryAllowed) {
+                redirect = "/singleEvent/\(data.eventId)/fish?message=\(message)"
+            } else {
+                redirect = "/singleEvent/\(data.eventId)/fish?message=Unknown+error"
+            }
+            return req.future(req.redirect(to: redirect))
+        }
+
         return Event
             .query(on: req)
             .filter(\.id == data.eventId)
@@ -96,6 +118,12 @@ struct FishController: RouteCollection {
 
 struct FishContext: Encodable {
     let event: Event
+    let message: String?
+
+    init(event: Event, message: String? = nil) {
+        self.event = event
+        self.message = message
+    }
 }
 
 struct PostFishData: Content {
@@ -108,4 +136,15 @@ struct PostFishData: Content {
 
 struct EditFishContext: Encodable {
     let fish: Fish
+}
+
+extension PostFishData: Validatable, Reflectable {
+    static func validations() throws
+        -> Validations<PostFishData> {
+            var validations = Validations(PostFishData.self)
+            try validations.add(\.fishType, .alphanumeric && .count(2...))
+            try validations.add(\.fisherman, .alphanumeric && .count(2...))
+
+            return validations
+    }
 }

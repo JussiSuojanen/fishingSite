@@ -9,18 +9,6 @@ import Vapor
 import FluentMySQL
 
 final class Fish: Codable {
-//    enum FishType: String, MySQLEnumType, Codable {
-//        static func reflectDecoded() throws -> (FishType, FishType) {
-//            return(.grayling, .trout)
-//        }
-//
-//        case grayling
-//        case trout
-//        case salmon
-//        case char
-//        case piker
-//    }
-
     var id: Int?
     var eventId: Int
     var fishType: String

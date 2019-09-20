@@ -98,15 +98,8 @@ struct IndexController: RouteCollection {
         do {
             try data.validate()
         } catch (let error) {
-            let redirect: String
-            if let error = error as? ValidationError,
-                let message = error.reason.addingPercentEncoding(
-                    withAllowedCharacters: .urlQueryAllowed) {
-                redirect = "/register?message=\(message)"
-            } else {
-                redirect = "/register?message=Unknown+error"
-            }
-            return req.future(req.redirect(to: redirect))
+            let message: String = (error as? ValidationError)?.extractUrlQueryComponent() ?? "Unknown+error"
+            return req.future(req.redirect(to: "/register?message=\(message)"))
         }
 
         let password = try BCrypt.hash(data.password)

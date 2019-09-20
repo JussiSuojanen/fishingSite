@@ -42,15 +42,8 @@ struct EstimateController: RouteCollection {
         do {
             try data.validate()
         } catch (let error) {
-            let redirect: String
-            if let error = error as? ValidationError,
-                let message = error.reason.addingPercentEncoding(
-                    withAllowedCharacters: .urlQueryAllowed) {
-                redirect = "/singleEvent/\(data.eventId)/estimate?message=\(message)"
-            } else {
-                redirect = "/singleEvent/\(data.eventId)/estimate?message=Unknown+error"
-            }
-            return req.future(req.redirect(to: redirect))
+            let message: String = (error as? ValidationError)?.extractUrlQueryComponent() ?? "Unknown+error"
+            return req.future(req.redirect(to: "/singleEvent/\(data.eventId)/estimate?message=\(message)"))
         }
 
         return Event

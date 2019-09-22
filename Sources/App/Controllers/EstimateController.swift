@@ -22,6 +22,7 @@ struct EstimateController: RouteCollection {
     }
 
     func estimateHandler(_ req: Request) throws -> Future<View> {
+        let user = try req.requireAuthenticated(User.self)
         return try req
             .parameters
             .next(Event.self)
@@ -32,7 +33,8 @@ struct EstimateController: RouteCollection {
                         "estimate",
                         EstimateContext(
                             event: event,
-                            message: req.query[String.self, at: "message"]
+                            message: req.query[String.self, at: "message"],
+                            showFishingEvents: user.hasEvents(req: req)
                         )
                 )
         }
@@ -87,13 +89,19 @@ struct EstimateController: RouteCollection {
     }
 
     func editEstimateHandler(_ req: Request) throws -> Future<View> {
+        let user = try req.requireAuthenticated(User.self)
         return try req
             .parameters
             .next(Estimate.self)
             .flatMap { estimate in
                 return try req
                     .view()
-                    .render("editEstimate", EditEstimateContext(estimate: estimate))
+                    .render("editEstimate",
+                            EditEstimateContext(
+                                estimate: estimate,
+                                showFishingEvents: user.hasEvents(req: req)
+                        )
+                )
         }
     }
 
@@ -126,10 +134,12 @@ struct EstimateContext: Encodable {
     let event: Event
     let message: String?
     let userLoggedIn = true // for unauthenticated view is not accessible
+    let showFishingEvents: Future<Bool>
 
-    init(event: Event, message: String? = nil) {
+    init(event: Event, message: String? = nil, showFishingEvents: Future<Bool>) {
         self.event = event
         self.message = message
+        self.showFishingEvents = showFishingEvents
     }
 }
 
@@ -160,4 +170,5 @@ extension PostEstimateData: Validatable, Reflectable {
 struct EditEstimateContext: Encodable {
     let estimate: Estimate
     let userLoggedIn = true // for unauthenticated view is not accessible
+    let showFishingEvents: Future<Bool>
 }

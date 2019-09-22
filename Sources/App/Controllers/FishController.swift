@@ -22,6 +22,7 @@ struct FishController: RouteCollection {
     }
 
     func fishHandler(_ req: Request) throws -> Future<View> {
+        let user = try req.requireAuthenticated(User.self)
         return try req
             .parameters
             .next(Event.self)
@@ -32,7 +33,8 @@ struct FishController: RouteCollection {
                         "fish",
                         FishContext(
                             event: event,
-                            message: req.query[String.self, at: "message"]
+                            message: req.query[String.self, at: "message"],
+                            showFishingEvents: user.hasEvents(req: req)
                         )
                 )
         }
@@ -82,13 +84,18 @@ struct FishController: RouteCollection {
     }
 
     func editFishHandler(_ req: Request) throws -> Future<View> {
+        let user = try req.requireAuthenticated(User.self)
         return try req
             .parameters
             .next(Fish.self)
             .flatMap { fish in
                 return try req
                     .view()
-                    .render("editFish", EditFishContext(fish: fish))
+                    .render("editFish", EditFishContext(
+                        fish: fish,
+                        showFishingEvents: user.hasEvents(req: req)
+                        )
+                )
         }
     }
 
@@ -113,10 +120,12 @@ struct FishContext: Encodable {
     let event: Event
     let message: String?
     let userLoggedIn = true // for unauthenticated view is not accessible
+    let showFishingEvents: Future<Bool>
 
-    init(event: Event, message: String? = nil) {
+    init(event: Event, message: String? = nil, showFishingEvents: Future<Bool>) {
         self.event = event
         self.message = message
+        self.showFishingEvents = showFishingEvents
     }
 }
 
@@ -131,6 +140,7 @@ struct PostFishData: Content {
 struct EditFishContext: Encodable {
     let fish: Fish
     let userLoggedIn = true // for unauthenticated view is not accessible
+    let showFishingEvents: Future<Bool>
 }
 
 extension PostFishData: Validatable, Reflectable {

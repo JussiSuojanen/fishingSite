@@ -27,15 +27,14 @@ struct IndexController: RouteCollection {
 
         if userLoggedIn {
             let user = try req.requireAuthenticated(User.self)
-            return try user.events
-                .query(on: req)
-                .all()
-                .flatMap(to: View.self) { events in
+            return try user
+                .hasEvents(req: req)
+                .flatMap(to: View.self) { hasEvents in
                     let context = IndexContext(
                         title: "Fishing site!",
                         userLoggedIn: userLoggedIn,
                         showCookieMessage: showCookieMessage,
-                        showFishingEvents: (events.count > 0) ? true : false
+                        showFishingEvents: hasEvents
                     )
                     return try req.view().render("index", context)
             }

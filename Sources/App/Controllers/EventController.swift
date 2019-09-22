@@ -23,11 +23,13 @@ struct EventController: RouteCollection {
     }
 
     func eventHandler(_ req: Request) throws -> Future<View> {
-        return try req.view().render("event", EventContext())
+        let user = try req.requireAuthenticated(User.self)
+        return try req.view().render("event", EventContext(showFishingEvents: user.hasEvents(req: req)))
     }
 
     func joinEventHandler(_ req: Request) throws -> Future<View> {
-        return try req.view().render("joinEvent", JoinEventContext())
+        let user = try req.requireAuthenticated(User.self)
+        return try req.view().render("joinEvent", JoinEventContext(showFishingEvents: user.hasEvents(req: req)))
     }
 
     func eventPostHandler(_ req: Request, data: EventPostData) throws -> Future<View> {
@@ -44,7 +46,9 @@ struct EventController: RouteCollection {
                         return try req
                             .view()
                             .render("eventList",
-                                    EventListContext(events: user.events.query(on: req).all()
+                                    EventListContext(
+                                        events: user.events.query(on: req).all(),
+                                        showFishingEvents: user.hasEvents(req: req)
                             )
                         )
                 }
@@ -68,7 +72,10 @@ struct EventController: RouteCollection {
                         return try req
                             .view()
                             .render("eventList",
-                                    EventListContext(events: user.events.query(on: req).all())
+                                    EventListContext(
+                                        events: user.events.query(on: req).all(),
+                                        showFishingEvents: user.hasEvents(req: req)
+                                )
                         )
                 }
         }
@@ -81,11 +88,14 @@ struct EventController: RouteCollection {
             .render(
                 "eventList",
                 EventListContext(
-                    events: user.events.query(on: req).all())
+                    events: user.events.query(on: req).all(),
+                    showFishingEvents: user.hasEvents(req: req)
+                )
         )
     }
 
     func singleEventHandler(_ req: Request) throws -> Future<View> {
+        let user = try req.requireAuthenticated(User.self)
         return try req
             .parameters
             .next(Event.self)
@@ -96,7 +106,8 @@ struct EventController: RouteCollection {
                             SingleEventContext(
                                 event: event,
                                 fishes: event.fishes.query(on: req).all(),
-                                estimates: event.estimates.query(on: req).all()
+                                estimates: event.estimates.query(on: req).all(),
+                                showFishingEvents: user.hasEvents(req: req)
                         )
                 )
         }
@@ -106,11 +117,13 @@ struct EventController: RouteCollection {
 struct EventContext: Encodable {
     let title = "Create new event"
     let userLoggedIn = true // for unauthenticated view is not accessible
+    let showFishingEvents: Future<Bool>
 }
 
 struct JoinEventContext: Encodable {
     let title = "Join event"
     let userLoggedIn = true // for unauthenticated view is not accessible
+    let showFishingEvents: Future<Bool>
 }
 
 struct EventPostData: Content {
@@ -126,6 +139,7 @@ struct EventListContext: Encodable {
     let title = "My events"
     let userLoggedIn = true // for unauthenticated view is not accessible
     let events: Future<[Event]>
+    let showFishingEvents: Future<Bool>
 }
 
 struct SingleEventContext: Encodable {
@@ -133,4 +147,5 @@ struct SingleEventContext: Encodable {
     let fishes: Future<[Fish]>
     let estimates: Future<[Estimate]>
     let userLoggedIn = true // for unauthenticated view is not accessible
+    let showFishingEvents: Future<Bool>
 }

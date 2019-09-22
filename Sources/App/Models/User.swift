@@ -45,6 +45,15 @@ extension User {
     var events: Siblings<User, Event, EventUserPivot> {
         return siblings()
     }
+
+    func hasEvents(req: DatabaseConnectable) throws -> Future<Bool> {
+        return try events
+            .query(on: req)
+            .all()
+            .flatMap { events in
+                return req.future(events.count > 0)
+        }
+    }
 }
 
 extension User: MySQLModel {}

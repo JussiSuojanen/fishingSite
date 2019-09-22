@@ -112,6 +112,7 @@ struct FishController: RouteCollection {
 struct FishContext: Encodable {
     let event: Event
     let message: String?
+    let userLoggedIn = true // for unauthenticated view is not accessible
 
     init(event: Event, message: String? = nil) {
         self.event = event
@@ -129,6 +130,7 @@ struct PostFishData: Content {
 
 struct EditFishContext: Encodable {
     let fish: Fish
+    let userLoggedIn = true // for unauthenticated view is not accessible
 }
 
 extension PostFishData: Validatable, Reflectable {

@@ -125,6 +125,7 @@ struct EstimateController: RouteCollection {
 struct EstimateContext: Encodable {
     let event: Event
     let message: String?
+    let userLoggedIn = true // for unauthenticated view is not accessible
 
     init(event: Event, message: String? = nil) {
         self.event = event
@@ -158,4 +159,5 @@ extension PostEstimateData: Validatable, Reflectable {
 
 struct EditEstimateContext: Encodable {
     let estimate: Estimate
+    let userLoggedIn = true // for unauthenticated view is not accessible
 }

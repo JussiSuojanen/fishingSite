@@ -105,9 +105,12 @@ struct EventController: RouteCollection {
 
 struct EventContext: Encodable {
     let title = "Create new event"
+    let userLoggedIn = true // for unauthenticated view is not accessible
 }
+
 struct JoinEventContext: Encodable {
     let title = "Join event"
+    let userLoggedIn = true // for unauthenticated view is not accessible
 }
 
 struct EventPostData: Content {
@@ -121,6 +124,7 @@ struct EventJoinPostData: Content {
 
 struct EventListContext: Encodable {
     let title = "My events"
+    let userLoggedIn = true // for unauthenticated view is not accessible
     let events: Future<[Event]>
 }
 
@@ -128,4 +132,5 @@ struct SingleEventContext: Encodable {
     let event: Event
     let fishes: Future<[Fish]>
     let estimates: Future<[Estimate]>
+    let userLoggedIn = true // for unauthenticated view is not accessible
 }

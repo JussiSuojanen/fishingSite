@@ -30,12 +30,12 @@ struct IndexController: RouteCollection {
             return try user.events
                 .query(on: req)
                 .all()
-                .flatMap(to: View.self) { value in
+                .flatMap(to: View.self) { events in
                     let context = IndexContext(
                         title: "Fishing site!",
                         userLoggedIn: userLoggedIn,
                         showCookieMessage: showCookieMessage,
-                        showFishingEvents: (value.count > 0) ? true : false
+                        showFishingEvents: (events.count > 0) ? true : false
                     )
                     return try req.view().render("index", context)
             }

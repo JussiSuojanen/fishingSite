@@ -132,8 +132,8 @@ struct FishContext: Encodable {
 struct PostFishData: Content {
     let eventId: Int
     let fishType: String
-    let lengthInCm: Float?
-    let weightInKg: Float?
+    let lengthInCm: Double?
+    let weightInKg: Double?
     let fisherman: String
 }
 

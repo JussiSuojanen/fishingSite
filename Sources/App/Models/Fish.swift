@@ -12,11 +12,11 @@ final class Fish: Codable {
     var id: Int?
     var eventId: Int
     var fishType: String
-    var lengthInCm: Float?
-    var weightInKg: Float?
+    var lengthInCm: Double?
+    var weightInKg: Double?
     var fisherman: String
 
-    init(eventId: Int, fishType: String, lengthInCm: Float?, weightInKg: Float?, fisherman: String) {
+    init(eventId: Int, fishType: String, lengthInCm: Double?, weightInKg: Double?, fisherman: String) {
         self.eventId = eventId
         self.fishType = fishType
         self.lengthInCm = lengthInCm
@@ -24,7 +24,7 @@ final class Fish: Codable {
         self.fisherman = fisherman
     }
 
-    init(id: Int?, eventId: Int, fishType: String, lengthInCm: Float?, weightInKg: Float?, fisherman: String) {
+    init(id: Int?, eventId: Int, fishType: String, lengthInCm: Double?, weightInKg: Double?, fisherman: String) {
         self.id = id
         self.eventId = eventId
         self.fishType = fishType

@@ -47,6 +47,7 @@ struct FishController: RouteCollection {
             let message: String = (error as? ValidationError)?.extractUrlQueryComponent() ?? "Unknown+error"
             return req.future(req.redirect(to: "/singleEvent/\(data.eventId)/fish?message=\(message)"))
         }
+        let user = try req.requireAuthenticated(User.self)
 
         return Event
             .query(on: req)
@@ -60,7 +61,9 @@ struct FishController: RouteCollection {
                             fishType: data.fishType,
                             lengthInCm: data.lengthInCm,
                             weightInKg: data.weightInKg,
-                            fisherman: data.fisherman)
+                            fisherman: data.fisherman,
+                            createdByUserId: user.id
+                    )
                     .save(on: req)
                     .flatMap(to: Response.self) { fish in
                         return unwrappedEvent.fishes.attach(fish, on: req).map(to: Response.self) { _ in
@@ -100,6 +103,8 @@ struct FishController: RouteCollection {
     }
 
     func editFishPostHandler(_ req: Request) throws -> Future<Response> {
+        let user = try req.requireAuthenticated(User.self)
+
         return try flatMap(
             to: Response.self,
             req.parameters.next(Fish.self),
@@ -109,6 +114,7 @@ struct FishController: RouteCollection {
             fish.lengthInCm = data.lengthInCm
             fish.weightInKg = data.weightInKg
             fish.fisherman = data.fisherman
+            fish.editedByUserId = user.id
             return fish.save(on: req).map { _ in
                 return req.redirect(to: "/singleEvent/\(fish.eventId)")
             }

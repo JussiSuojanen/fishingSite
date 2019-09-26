@@ -19,6 +19,8 @@ final class Estimate: Codable {
     var salmonInKg: Double?
     var charInCm: Double?
     var charInKg: Double?
+    var createdByUserId: Int?
+    var editedByUserId: Int?
     var createdAt: Date?
     var updatedAt: Date?
 
@@ -31,7 +33,8 @@ final class Estimate: Codable {
          salmonInCm: Double?,
          salmonInKg: Double?,
          charInCm: Double?,
-         charInKg: Double?)
+         charInKg: Double?,
+         createdByUserId: Int?)
     {
         self.eventId = eventId
         self.guesserName = guesserName
@@ -43,6 +46,7 @@ final class Estimate: Codable {
         self.salmonInKg = salmonInKg
         self.charInCm = charInCm
         self.charInKg = charInKg
+        self.createdByUserId = createdByUserId
     }
 
     init(id: Int?,
@@ -55,7 +59,8 @@ final class Estimate: Codable {
          salmonInCm: Double?,
          salmonInKg: Double?,
          charInCm: Double?,
-         charInKg: Double?)
+         charInKg: Double?,
+         createdByUserId: Int?)
     {
         self.id = id
         self.eventId = eventId
@@ -68,6 +73,7 @@ final class Estimate: Codable {
         self.salmonInKg = salmonInKg
         self.charInCm = charInCm
         self.charInKg = charInKg
+        self.createdByUserId = createdByUserId
     }
 }
 

@@ -48,6 +48,8 @@ struct EstimateController: RouteCollection {
             return req.future(req.redirect(to: "/singleEvent/\(data.eventId)/estimate?message=\(message)"))
         }
 
+        let user = try req.requireAuthenticated(User.self)
+
         return Event
             .query(on: req)
             .filter(\.id == data.eventId)
@@ -65,7 +67,8 @@ struct EstimateController: RouteCollection {
                                 salmonInCm: data.salmonInCm,
                                 salmonInKg: data.salmonInKg,
                                 charInCm: data.charInCm,
-                                charInKg: data.charInKg)
+                                charInKg: data.charInKg,
+                                createdByUserId: user.id)
                     .save(on: req)
                     .flatMap(to: Response.self) { estimate in
                         return unwrappedEvent.estimates.attach(estimate, on: req).map(to: Response.self) { _ in
@@ -107,6 +110,8 @@ struct EstimateController: RouteCollection {
 
 
     func editEstimatePostHandler(_ req: Request) throws -> Future<Response> {
+        let user = try req.requireAuthenticated(User.self)
+
         return try flatMap(
             to: Response.self,
             req.parameters.next(Estimate.self),
@@ -122,6 +127,7 @@ struct EstimateController: RouteCollection {
             estimate.salmonInKg = data.salmonInKg
             estimate.charInCm = data.charInCm
             estimate.charInKg = data.charInKg
+            estimate.editedByUserId = user.id
 
             return estimate.save(on: req).map { _ in
                 return req.redirect(to: "/singleEvent/\(estimate.eventId)")

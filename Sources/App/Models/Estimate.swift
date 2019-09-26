@@ -19,6 +19,8 @@ final class Estimate: Codable {
     var salmonInKg: Double?
     var charInCm: Double?
     var charInKg: Double?
+    var createdAt: Date?
+    var updatedAt: Date?
 
     init(eventId: Int,
          guesserName: String,
@@ -69,7 +71,10 @@ final class Estimate: Codable {
     }
 }
 
-extension Estimate: MySQLModel {}
+extension Estimate: MySQLModel {
+    static let createdAtKey: TimestampKey? = \.createdAt
+    static let updatedAtKey: TimestampKey? = \.updatedAt
+}
 extension Estimate: Parameter {}
 extension Estimate: Content {}
 

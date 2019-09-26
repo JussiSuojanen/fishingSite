@@ -15,6 +15,8 @@ final class Fish: Codable {
     var lengthInCm: Double?
     var weightInKg: Double?
     var fisherman: String
+    var createdAt: Date?
+    var updatedAt: Date?
 
     init(eventId: Int, fishType: String, lengthInCm: Double?, weightInKg: Double?, fisherman: String) {
         self.eventId = eventId
@@ -34,7 +36,11 @@ final class Fish: Codable {
     }
 }
 
-extension Fish: MySQLModel {}
+extension Fish: MySQLModel {
+    static let createdAtKey: TimestampKey? = \.createdAt
+    static let updatedAtKey: TimestampKey? = \.updatedAt
+}
+
 extension Fish: Parameter {}
 extension Fish: Content {}
 

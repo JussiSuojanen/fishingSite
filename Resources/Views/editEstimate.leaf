@@ -12,30 +12,65 @@
         <input type="number" name="eventId" class="form-control" id="eventId" value="#(estimate.eventId)"/>
     </div>
     <div class="form-group">
-        <label for="guesserName">Name</label>
-        <input type="text" name="guesserName" class="form-control" id="guesserName" placeholder="Who is guessing?" value="#(estimate.guesserName)"/>
+        <div class="row">
+            <label for="guesserName">Name</label>
+        </div>
+        <div class="row">
+            <input class="form-control col-10" type="text" name="guesserName" id="guesserName" placeholder="Who is guessing?" value="#(estimate.guesserName)"/>
+        </div>
     </div>
     <div class="form-group">
-        <label>Grayling</label>
-        <input type="number" step="0.1" name="graylingInCm" class="form-control" id="graylingInCm" placeholder="Cm" value="#(estimate.graylingInCm)"/>
-        <input type="number" step="0.1" name="graylingInKg" class="form-control" id="graylignInKg" placeholder="Kg" value="#(estimate.graylingInKg)"/>
+        <div class="row">
+            <label for="fishType">Grayling</label>
+        </div>
+        <div class="row">
+            <input class="form-control col-10" type="number" step="0.1" name="graylingInCm" id="graylingInCm" value="#(estimate.graylingInCm)"/>
+            <label class="col-2">Cm</label>
+        </div>
+        <div class="row">
+            <input class="form-control col-10" type="number" step="0.1" name="graylingInKg" id="graylignInKg" value="#(estimate.graylingInKg)"/>
+            <label class="col-2">Kg</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <label for="fishType">Trout</label>
+        </div>
+        <div class="row">
+            <input class="form-control col-10" type="number" step="0.1" name="troutInCm" id="troutInCm" value="#(estimate.troutInCm)"/>
+            <label class="col-2">Cm</label>
+        </div>
+        <div class="row">
+            <input class="form-control col-10" type="number" step="0.1" name="troutInKg" id="troutInKg" value="#(estimate.troutInKg)"/>
+            <label class="col-2">Kg</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <label for="fishType">Salmon</label>
+        </div>
+        <div class="row">
+            <input class="form-control col-10" type="number" step="0.1" name="salmonInCm" id="salmonInCm" value="#(estimate.salmonInCm)"/>
+            <label class="col-2">Cm</label>
+        </div>
+        <div class="row">
+            <input class="form-control col-10" type="number" step="0.1" name="salmonInKg" id="salmonInKg" value="#(estimate.salmonInKg)"/>
+            <label class="col-2">Kg</label>
+        </div>
     </div>
 
     <div class="form-group">
-        <label>Trout</label>
-        <input type="number" step="0.1" name="troutInCm" class="form-control" id="troutInCm" placeholder="Cm" value="#(estimate.troutInCm)"/>
-        <input type="number" step="0.1" name="troutInKg" class="form-control" id="troutInKg" placeholder="Kg" value="#(estimate.troutInKg)"/>
-    </div>
-    <div class="form-group">
-        <label>Salmon</label>
-        <input type="number" step="0.1" name="salmonInCm" class="form-control" id="salmonInCm" placeholder="Cm" value="#(estimate.salmonInCm)"/>
-        <input type="number" step="0.1" name="salmonInKg" class="form-control" id="salmonInKg" placeholder="Kg" value="#(estimate.salmonInKg)"/>
-    </div>
-
-    <div class="form-group">
-        <label>Char</label>
-        <input type="number" step="0.1" name="charInCm" class="form-control" id="charInCm" placeholder="Cm" value="#(estimate.charInCm)"/>
-        <input type="number" step="0.1" name="charInKg" class="form-control" id="charInKg" placeholder="Kg" value="#(estimate.charInKg)"/>
+        <div class="row">
+            <label for="fishType">Char</label>
+        </div>
+        <div class="row">
+            <input class="form-control col-10" type="number" step="0.1" name="charInCm" id="charInCm" value="#(estimate.charInCm)"/>
+            <label class="col-2">Cm</label>
+        </div>
+        <div class="row">
+            <input class="form-control col-10" type="number" step="0.1" name="charInKg" id="charInKg" value="#(estimate.charInKg)"/>
+            <label class="col-2">Kg</label>
+        </div>
     </div>
     <button type="submit" class="btn btn-primary">
         Save

@@ -153,8 +153,8 @@ extension PostFishData: Validatable, Reflectable {
     static func validations() throws
         -> Validations<PostFishData> {
             var validations = Validations(PostFishData.self)
-            try validations.add(\.fishType, .alphanumeric && .count(2...))
-            try validations.add(\.fisherman, .alphanumeric && .count(2...))
+            try validations.add(\.fishType, .characterSet(.alphanumerics + .whitespaces) && .count(2...))
+            try validations.add(\.fisherman, .characterSet(.alphanumerics + .whitespaces) && .count(2...))
 
             return validations
     }

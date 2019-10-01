@@ -166,12 +166,11 @@ extension PostEstimateData: Validatable, Reflectable {
     static func validations() throws
         -> Validations<PostEstimateData> {
             var validations = Validations(PostEstimateData.self)
-            try validations.add(\.name, .alphanumeric && .count(2...))
+            try validations.add(\.name, .characterSet(.alphanumerics + .whitespaces) && .count(2...))
 
             return validations
     }
 }
-
 
 struct EditEstimateContext: Encodable {
     let estimate: Estimate

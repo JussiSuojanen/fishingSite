@@ -1,11 +1,11 @@
 
-<div id="estimatesTable" class="table-editable">
+<div id="estimatesTable" class="table-sm table-md table-lg">
     <span class="table-add glyphicon glyphicon-plus"></span>
     <table class="table table-bordered" cellspacing="0" width="100%">
         <thead class="thead-light">
             <tr align="center">
                 <th>Your name</th>
-                <th colspan="2" >Grayling</th>
+                <th colspan="2">Grayling</th>
                 <th colspan="2">Trout</th>
                 <th colspan="2">Salmon</th>
                 <th colspan="2">Char</th>

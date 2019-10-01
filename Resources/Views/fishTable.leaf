@@ -1,6 +1,6 @@
-<div id="table" class="table-editable">
+<div id="table" class="table-sm table-md table-lg">
     <span class="table-add glyphicon glyphicon-plus"></span>
-    <table class="table table-bordered table-hover"  cellspacing="0" width="100%">
+    <table class="table table-bordered"  cellspacing="0" width="100%">
         <thead class="thead-light">
             <tr>
                 <th>Fish type</th>

@@ -26,5 +26,19 @@ final class EventFishPivot: MySQLPivot {
     }
 }
 
-extension EventFishPivot: Migration {}
+extension EventFishPivot: Migration {
+    static func prepare(on connection: MySQLConnection) -> Future<Void> {
+        return Database.create(self, on: connection) { builder in
+            try addProperties(to: builder)
+            builder.reference(
+                from: \.fishId,
+                to: \Fish.id,
+                onDelete: .cascade)
+
+            builder.reference(
+                from: \.eventId,
+                to: \Event.id,
+                onDelete: .cascade)
+        }
+    }}
 extension EventFishPivot: ModifiablePivot {}

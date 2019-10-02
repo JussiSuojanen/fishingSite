@@ -26,5 +26,20 @@ final class EventUserPivot: MySQLPivot {
     }
 }
 
-extension EventUserPivot: Migration {}
+extension EventUserPivot: Migration {
+    static func prepare(on connection: MySQLConnection) -> Future<Void> {
+        return Database.create(self, on: connection) { builder in
+            try addProperties(to: builder)
+            builder.reference(
+                from: \.userId,
+                to: \User.id,
+                onDelete: .cascade)
+
+            builder.reference(
+                from: \.eventId,
+                to: \Event.id,
+                onDelete: .cascade)
+        }
+    }
+}
 extension EventUserPivot: ModifiablePivot {}

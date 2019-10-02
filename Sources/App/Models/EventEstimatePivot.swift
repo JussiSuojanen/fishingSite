@@ -25,6 +25,21 @@ final class EventEstimatePivot: MySQLPivot {
     }
 }
 
-extension EventEstimatePivot: Migration {}
+extension EventEstimatePivot: Migration {
+    static func prepare(on connection: MySQLConnection) -> Future<Void> {
+        return Database.create(self, on: connection) { builder in
+            try addProperties(to: builder)
+            builder.reference(
+                from: \.estimateId,
+                to: \Estimate.id,
+                onDelete: .cascade)
+
+            builder.reference(
+                from: \.eventId,
+                to: \Event.id,
+                onDelete: .cascade)
+        }
+    }
+}
 extension EventEstimatePivot: ModifiablePivot {}
 

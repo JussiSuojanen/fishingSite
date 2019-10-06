@@ -17,11 +17,11 @@
     </div>
     <div class="form-group">
         <label for="lengthInCm">Length</label>
-        <input type="number" name="lengthInCm" class="form-control col-12" id="lengthInCm" value="#(fish.lengthInCm)"/>
+        <input type="text" name="lengthInCm" class="form-control col-12" id="lengthInCm" value="#(fish.lengthInCm)"/>
     </div>
     <div class="form-group">
         <label for="weightInKg">Weight</label>
-        <input type="number" name="weightInKg" class="form-control col-12" id="weightInKg" value="#(fish.weightInKg)"/>
+        <input type="text" name="weightInKg" class="form-control col-12" id="weightInKg" value="#(fish.weightInKg)"/>
     </div>
     <div class="form-group">
         <label for="fisherman">Fisherman</label>

@@ -111,8 +111,8 @@ struct FishController: RouteCollection {
             req.content.decode(Fish.self)
         ) { fish, data in
             fish.fishType = data.fishType
-            fish.lengthInCm = data.lengthInCm
-            fish.weightInKg = data.weightInKg
+            fish.lengthInCm = data.lengthInCm.roundTo2Decimal()
+            fish.weightInKg = data.weightInKg.roundTo2Decimal()
             fish.fisherman = data.fisherman
             fish.editedByUserId = user.id
             return fish.save(on: req).map { _ in

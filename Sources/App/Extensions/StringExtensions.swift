@@ -8,11 +8,11 @@
 import Foundation
 
 extension String {
-    func toDoubleWith2Decimal() -> Double? {
+    func toDouble() -> Double? {
         guard let doubleValue = NumberFormatter().number(from: self)?.doubleValue else {
             return nil
         }
 
-        return  (doubleValue * 100).rounded() / 100;
+        return  doubleValue
     }
 }

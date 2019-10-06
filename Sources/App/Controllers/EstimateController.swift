@@ -60,14 +60,14 @@ struct EstimateController: RouteCollection {
                 }
                 return Estimate(eventId: data.eventId,
                                 guesserName: data.name,
-                                graylingInCm: data.graylingInCm,
-                                graylingInKg: data.graylingInKg,
-                                troutInCm: data.troutInCm,
-                                troutInKg: data.troutInKg,
-                                salmonInCm: data.salmonInCm,
-                                salmonInKg: data.salmonInKg,
-                                charInCm: data.charInCm,
-                                charInKg: data.charInKg,
+                                graylingInCm: data.graylingInCm.toDouble()?.roundTo2Decimal() ?? 0,
+                                graylingInKg: data.graylingInKg.toDouble()?.roundTo2Decimal() ?? 0,
+                                troutInCm: data.troutInCm.toDouble()?.roundTo2Decimal() ?? 0,
+                                troutInKg: data.troutInKg.toDouble()?.roundTo2Decimal() ?? 0,
+                                salmonInCm: data.salmonInCm.toDouble()?.roundTo2Decimal() ?? 0,
+                                salmonInKg: data.salmonInKg.toDouble()?.roundTo2Decimal() ?? 0,
+                                charInCm: data.charInCm.toDouble()?.roundTo2Decimal() ?? 0,
+                                charInKg: data.charInKg.toDouble()?.roundTo2Decimal() ?? 0,
                                 createdByUserId: user.id)
                     .save(on: req)
                     .flatMap(to: Response.self) { estimate in
@@ -119,14 +119,14 @@ struct EstimateController: RouteCollection {
         ) { estimate, data in
 
             estimate.guesserName = data.guesserName
-            estimate.graylingInCm = data.graylingInCm
-            estimate.graylingInKg = data.graylingInKg
-            estimate.troutInCm = data.troutInKg
-            estimate.troutInKg = data.troutInKg
-            estimate.salmonInCm = data.salmonInCm
-            estimate.salmonInKg = data.salmonInKg
-            estimate.charInCm = data.charInCm
-            estimate.charInKg = data.charInKg
+            estimate.graylingInCm = data.graylingInCm.roundTo2Decimal()
+            estimate.graylingInKg = data.graylingInKg.roundTo2Decimal()
+            estimate.troutInCm = data.troutInKg.roundTo2Decimal()
+            estimate.troutInKg = data.troutInKg.roundTo2Decimal()
+            estimate.salmonInCm = data.salmonInCm.roundTo2Decimal()
+            estimate.salmonInKg = data.salmonInKg.roundTo2Decimal()
+            estimate.charInCm = data.charInCm.roundTo2Decimal()
+            estimate.charInKg = data.charInKg.roundTo2Decimal()
             estimate.editedByUserId = user.id
 
             return estimate.save(on: req).map { _ in
@@ -152,14 +152,14 @@ struct EstimateContext: Encodable {
 struct PostEstimateData: Content {
     let eventId: Int
     let name: String
-    let graylingInCm: Double
-    let graylingInKg: Double
-    let troutInCm: Double
-    let troutInKg: Double
-    let salmonInCm: Double
-    let salmonInKg: Double
-    let charInCm: Double
-    let charInKg: Double
+    let graylingInCm: String
+    let graylingInKg: String
+    let troutInCm: String
+    let troutInKg: String
+    let salmonInCm: String
+    let salmonInKg: String
+    let charInCm: String
+    let charInKg: String
 }
 
 extension PostEstimateData: Validatable, Reflectable {

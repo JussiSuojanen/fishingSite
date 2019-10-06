@@ -24,11 +24,11 @@
                 <label for="fishType">Grayling</label>
             </div>
             <div class="row">
-                <input class="form-control col-10" type="number" step="0.1" name="graylingInCm" id="graylingInCm"/>
+                <input class="form-control col-10" type="text" name="graylingInCm" id="graylingInCm"/>
                 <label class="col-2">Cm</label>
             </div>
             <div class="row">
-                <input class="form-control col-10" type="number" step="0.1" name="graylingInKg" id="graylignInKg"/>
+                <input class="form-control col-10" type="text" name="graylingInKg" id="graylignInKg"/>
                 <label class="col-2">Kg</label>
             </div>
         </div>
@@ -37,11 +37,11 @@
                 <label for="fishType">Trout</label>
             </div>
             <div class="row">
-                <input class="form-control col-10" type="number" step="0.1" name="troutInCm" id="troutInCm"/>
+                <input class="form-control col-10" type="text" name="troutInCm" id="troutInCm"/>
                 <label class="col-2">Cm</label>
             </div>
             <div class="row">
-                <input class="form-control col-10" type="number" step="0.1" name="troutInKg" id="troutInKg"/>
+                <input class="form-control col-10" type="text" name="troutInKg" id="troutInKg"/>
                 <label class="col-2">Kg</label>
             </div>
         </div>
@@ -50,11 +50,11 @@
                 <label for="fishType">Salmon</label>
             </div>
             <div class="row">
-                <input class="form-control col-10" type="number" step="0.1" name="salmonInCm" id="salmonInCm"/>
+                <input class="form-control col-10" type="text" name="salmonInCm" id="salmonInCm"/>
                 <label class="col-2">Cm</label>
             </div>
             <div class="row">
-                <input class="form-control col-10" type="number" step="0.1" name="salmonInKg" id="salmonInKg"/>
+                <input class="form-control col-10" type="text" name="salmonInKg" id="salmonInKg"/>
                 <label class="col-2">Kg</label>
             </div>
         </div>
@@ -64,11 +64,11 @@
                 <label for="fishType">Char</label>
             </div>
             <div class="row">
-                <input class="form-control col-10" type="number" step="0.1" name="charInCm" id="charInCm"/>
+                <input class="form-control col-10" type="text" name="charInCm" id="charInCm"/>
                 <label class="col-2">Cm</label>
             </div>
             <div class="row">
-                <input class="form-control col-10" type="number" step="0.1" name="charInKg" id="charInKg"/>
+                <input class="form-control col-10" type="text" name="charInKg" id="charInKg"/>
                 <label class="col-2">Kg</label>
             </div>
         </div>

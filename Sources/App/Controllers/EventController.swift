@@ -100,12 +100,15 @@ struct EventController: RouteCollection {
             .parameters
             .next(Event.self)
             .flatMap(to: View.self) { event in
+                let sortedFishes: Future<[Fish]> = try event.fishes.query(on: req).all().map({ fishes in
+                    fishes.sorted(by: { ($0.lengthInCm ?? 0) > ($1.lengthInCm ?? 0) })
+                })
                 return try req
                     .view()
                     .render("singleEvent",
                             SingleEventContext(
                                 event: event,
-                                fishes: event.fishes.query(on: req).all(),
+                                fishes: sortedFishes,
                                 estimates: event.estimates.query(on: req).all(),
                                 showFishingEvents: user.hasEvents(req: req)
                         )

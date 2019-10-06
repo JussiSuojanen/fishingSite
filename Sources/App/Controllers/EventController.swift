@@ -101,7 +101,7 @@ struct EventController: RouteCollection {
             .next(Event.self)
             .flatMap(to: View.self) { event in
                 let sortedFishes: Future<[Fish]> = try event.fishes.query(on: req).all().map({ fishes in
-                    fishes.sorted(by: { ($0.lengthInCm ?? 0) > ($1.lengthInCm ?? 0) })
+                    fishes.sorted(by: { $0.lengthInCm > $1.lengthInCm })
                 })
                 return try req
                     .view()

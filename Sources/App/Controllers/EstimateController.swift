@@ -152,14 +152,14 @@ struct EstimateContext: Encodable {
 struct PostEstimateData: Content {
     let eventId: Int
     let name: String
-    let graylingInCm: Double?
-    let graylingInKg: Double?
-    let troutInCm: Double?
-    let troutInKg: Double?
-    let salmonInCm: Double?
-    let salmonInKg: Double?
-    let charInCm: Double?
-    let charInKg: Double?
+    let graylingInCm: Double
+    let graylingInKg: Double
+    let troutInCm: Double
+    let troutInKg: Double
+    let salmonInCm: Double
+    let salmonInKg: Double
+    let charInCm: Double
+    let charInKg: Double
 }
 
 extension PostEstimateData: Validatable, Reflectable {

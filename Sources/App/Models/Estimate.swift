@@ -11,14 +11,14 @@ final class Estimate: Codable {
     var id: Int?
     var eventId: Int
     var guesserName: String
-    var graylingInCm: Double?
-    var graylingInKg: Double?
-    var troutInCm: Double?
-    var troutInKg: Double?
-    var salmonInCm: Double?
-    var salmonInKg: Double?
-    var charInCm: Double?
-    var charInKg: Double?
+    var graylingInCm: Double
+    var graylingInKg: Double
+    var troutInCm: Double
+    var troutInKg: Double
+    var salmonInCm: Double
+    var salmonInKg: Double
+    var charInCm: Double
+    var charInKg: Double
     var createdByUserId: Int?
     var editedByUserId: Int?
     var createdAt: Date?
@@ -26,14 +26,14 @@ final class Estimate: Codable {
 
     init(eventId: Int,
          guesserName: String,
-         graylingInCm: Double?,
-         graylingInKg: Double?,
-         troutInCm: Double?,
-         troutInKg: Double?,
-         salmonInCm: Double?,
-         salmonInKg: Double?,
-         charInCm: Double?,
-         charInKg: Double?,
+         graylingInCm: Double,
+         graylingInKg: Double,
+         troutInCm: Double,
+         troutInKg: Double,
+         salmonInCm: Double,
+         salmonInKg: Double,
+         charInCm: Double,
+         charInKg: Double,
          createdByUserId: Int?)
     {
         self.eventId = eventId
@@ -52,14 +52,14 @@ final class Estimate: Codable {
     init(id: Int?,
          eventId: Int,
          guesserName: String,
-         graylingInCm: Double?,
-         graylingInKg: Double?,
-         troutInCm: Double?,
-         troutInKg: Double?,
-         salmonInCm: Double?,
-         salmonInKg: Double?,
-         charInCm: Double?,
-         charInKg: Double?,
+         graylingInCm: Double,
+         graylingInKg: Double,
+         troutInCm: Double,
+         troutInKg: Double,
+         salmonInCm: Double,
+         salmonInKg: Double,
+         charInCm: Double,
+         charInKg: Double,
          createdByUserId: Int?)
     {
         self.id = id

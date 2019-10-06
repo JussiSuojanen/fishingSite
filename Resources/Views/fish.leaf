@@ -16,11 +16,11 @@
     </div>
     <div class="form-group">
         <label for="lengthInCm">Length</label>
-        <input type="number" step="0.01" name="lengthInCm" class="form-control col-12" id="lengthInCm"/>
+        <input type="text" step="0.01" name="lengthInCm" class="form-control col-12" id="lengthInCm"/>
     </div>
     <div class="form-group">
         <label for="weightInKg">Weight</label>
-        <input type="number" step="0.01" name="weightInKg" class="form-control col-12" id="weightInKg"/>
+        <input type="text" step="0.01" name="weightInKg" class="form-control col-12" id="weightInKg"/>
     </div>
     <div class="form-group">
         <label for="fisherman">Fisherman</label>

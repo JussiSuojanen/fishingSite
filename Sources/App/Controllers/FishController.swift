@@ -59,8 +59,8 @@ struct FishController: RouteCollection {
                 }
                 return Fish(eventId: data.eventId,
                             fishType: data.fishType,
-                            lengthInCm: data.lengthInCm,
-                            weightInKg: data.weightInKg,
+                            lengthInCm: data.lengthInCm?.toDoubleWith2Decimal() ?? 0,
+                            weightInKg: data.weightInKg?.toDoubleWith2Decimal() ?? 0,
                             fisherman: data.fisherman,
                             createdByUserId: user.id
                     )
@@ -138,8 +138,8 @@ struct FishContext: Encodable {
 struct PostFishData: Content {
     let eventId: Int
     let fishType: String
-    let lengthInCm: Double?
-    let weightInKg: Double?
+    let lengthInCm: String?
+    let weightInKg: String?
     let fisherman: String
 }
 

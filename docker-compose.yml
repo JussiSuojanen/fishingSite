@@ -1,0 +1,36 @@
+# Version is dependent to Docker version
+# YML file is indent dependent
+version: "3"
+# Services to run
+services:
+    fishingsite:
+        #image: fishingsite
+        # This service will be build from file
+        build:
+            context: .
+            dockerfile: web.Dockerfile
+        ## Add custom commad to run instead of the command from Dockerfile
+        command: vapor run --hostname=fishingsite --port=9000
+        # Just a workaround, DB is slow to start
+        restart: unless-stopped
+        # HOSTPORT:CONTAINERPORT
+        ports:
+            - "8080:9000"
+        # This means that mysql container needs to be started before fishingsite
+        depends_on:
+            - "db"
+        environment:
+            DB_HOSTNAME: "db"
+            DB_USER: "vapor"
+            DB_PASSWORD: "verynicefishing"
+            DB_DATABASE: "fishing_database"
+    db:
+        image: mysql:5.7
+        # Open port to localhost if you need to access with sql app
+        ports:
+            - 3306:3306
+        environment:
+            MYSQL_USER: "vapor"
+            MYSQL_PASSWORD: "verynicefishing"
+            MYSQL_ROOT_PASSWORD: "default"
+            MYSQL_DATABASE: "fishing_database"
